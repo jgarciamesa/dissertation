@@ -1,0 +1,41 @@
+\begin{algorithm}[H]
+\caption{Alignpair (sequence1, sequence2, g, e)}
+\begin{algorithmic}[1]
+  \State $n, m \gets length(seq1), length(seq2)$;
+  \State \textbf{Initialize} the matrices of size $n+1$ x $m+1$
+  \State $\text{M, I, D} \gets \overline{0}$;
+  \State \textbf{Initialize} the first row and column with gap penalties
+  \For{$i \gets 1$ to $n$}
+    \State $\text{deletion}[i, 0] \gets g \oplus ((i - 1) \otimes e)$;
+  \EndFor
+  \For{$j \gets 1$ to $m$}
+    \State $\text{insertion}[0, j] \gets g \oplus ((j - 1) \otimes e)$;
+  \EndFor
+
+  \State \textbf{Fill in the matrices};
+  \For{$i \gets 1$ to $n$}
+    \For{$j \gets 1$ to $m$}
+      \State \textbf{Compute} from M, D, or I to M;
+      \State $\text{mch2mch} \gets M[i-1, j-1] \otimes (1-g) \otimes (1-g) \otimes \text{P}_{marginal}[i-1, j-1]$;
+      \State $\text{del2mch} \gets D[i-1, j-1] \otimes (1-e) \otimes \text{P}_{marginal}[i-1, j-1]$;
+      \State $\text{ins2mch} \gets I[i-1, j-1] \otimes (1-e) \otimes (1-g) \otimes \text{P}_{marginal}[i-1, j-1]$;
+
+      \State \textbf{Compute} from M, D, or I to D;
+      \State $\text{mch2del} \gets M[i-1, j] \otimes (1-g) \otimes g$;
+      \State $\text{del2del} \gets D[i-1, j] \otimes e$;
+      \State $\text{ins2del} \gets I[i-1, j] \otimes (1-e) \otimes g \otimes subst$;
+      
+      \State \textbf{Compute} from M, D, or I to I;
+      \State $\text{mch2ins} \gets M[i, j-1] \otimes g$;
+      \State $\text{ins2ins} \gets I[i, j-1] \otimes e$;
+        
+      \State \textbf{Scores};
+      \State $M[i, j] = \text{mch2mch} \oplus \text{del2mch} \oplus \text{ins2mch}$;
+      \State $D[i, j] = \text{mch2del} \oplus \text{del2del} \oplus \text{ins2del}$;
+      \State $I[i, j] = \text{mch2ins} \oplus \text{ins2ins}$;
+
+    \EndFor
+  \EndFor
+\State \textbf{Traceback};
+\end{algorithmic}
+\end{algorithm}

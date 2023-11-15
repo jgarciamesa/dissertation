@@ -1,0 +1,45 @@
+\definecolor{bestcolor}{RGB}{230,230,230}
+
+\begingroup\centering
+\begin{tabular}{r|ccccc}
+      & \textbf{COATi} & \textbf{MAFFT} & \textbf{PRANK\textsuperscript{*}} & \textbf{MACSE} & \textbf{Clustal$\Omega$}\\
+\hline
+Method    & Marg-MG & DNA & Codon & DNA+AA & AA\\[2pt]
+%\hline
+Avg alignment error ($d_{seq}$) & \cellcolor{bestcolor}0.00212 & 0.01460 & 0.01906 & 0.01351 & 0.02722\\
+Perfect alignments & \cellcolor{bestcolor}5766 & 5374 & 4760 & 2894 & 2997\\
+Imperfect alignments & \cellcolor{bestcolor}1070 & 1462 & 2076 & 3942 & 3839\\
+% \hline
+% F1 score for positive selection & \cellcolor{bestcolor}98.2\pct & 86.5\pct & 88.4\pct & 82.1\pct & 72.3\pct\\
+% F1 score for negative selection & \cellcolor{bestcolor}99.8\pct & 98.6\pct & 98.8\pct & 98.4\pct & 97.2\pct\\
+K2P distance RMSE & \cellcolor{bestcolor}6e-04 & 0.036 & 0.05 & 0.033 & 0.051 \\
+Overestimated K2P distance & \cellcolor{bestcolor}10.5\pct & 26.4\pct & 31.9\pct & 48.1\pct & 61.5\pct \\
+FDR positive selection & \cellcolor{bestcolor}2.9\pct & 17.7\pct & 9.3\pct & 8.8\pct & 29.2\pct \\
+FNR positive selection & \cellcolor{bestcolor}1.7\pct & 11.8\pct & 10.8\pct & 26.2\pct & 26.0\pct \\
+FDR negative selection & \cellcolor{bestcolor}0.2\pct & 1.2\pct & 1.1\pct & 2.6\pct & 2.6\pct \\
+FNR negative selection & \cellcolor{bestcolor}0.3\pct & 1.9\pct & 0.9\pct & 0.7\pct & 3\pct \\
+\multicolumn{5}{c}{\rule{0pt}{1em}\textit{*} PRANK produced 60 empty alignments.}\\
+\end{tabular}
+\par\endgroup
+% dseq 0.00212 0.01460 0.01906 0.01351 0.02722
+% Perfect alignments 5766.00000 5374.00000 4760.00000 2894.00000 2997.00000
+% Best alignments 5345.00000 4857.00000 4873.00000 3912.00000 2696.00000
+% Imperfect alignments 1070.00000 1462.00000 2076.00000 3942.00000 3839.00000
+% F1-score pos selection 0.98153 0.86479 0.88442 0.82095 0.72281
+% F1-score neg selection 0.99814 0.98590 0.98844 0.98381 0.97179
+% "Model COATi overestimated 10.5\% of branch lengths; mean 0.0075 +/- 0.0052"
+% "Model MAFFT overestimated 26.4\% of branch lengths; mean 0.0174 +/- 0.0349"
+% "Model PRANK overestimated 31.9\% of branch lengths; mean 0.012 +/- 0.0499"
+% "Model MACSE overestimated 48.1\% of branch lengths; mean 0.0168 +/- 0.0321"
+% "Model Clustalo overestimated 61.5\% of branch lengths; mean 0.027 +/- 0.0472"
+% "Model COATi rmse: 6e-04"
+% "Model MAFFT rmse: 0.036"
+% "Model PRANK rmse: 0.0498"
+% "Model MACSE rmse: 0.0332"
+% "Model Clustalo rmse: 0.0509"
+%          FDR.pos FNR.pos FDR.neg FNR.neg
+% mar-mg     0.029   0.017   0.002   0.003
+% mafft      0.177   0.118   0.012   0.019
+% prank      0.093   0.108   0.011   0.009
+% macse      0.088   0.262   0.026   0.007
+% clustalo   0.292   0.260   0.026   0.030

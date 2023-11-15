@@ -1,0 +1,25 @@
+\begin{algorithm}[!ht]
+\setstretch{1.1}
+\begin{algorithmic}[1]
+\Function{Needleman-Wunsch}{$s$, $v$, $\epsilon$}
+  \State $n, m \gets |s|, |v|$
+  \State $\text{M} \gets \operatorname{zero}(n+1, m+1)$ \Comment{Initialize the matrix of size $n+1$ by $m+1$}
+  \For{$i \gets 1$ to $n$} \Comment{Gap deletion penalties}
+    \State $\text{M}[i, 0] \gets i \cdot \epsilon$
+  \EndFor
+  \For{$j \gets 1$ to $m$} \Comment{Gap insertion penalties}
+    \State $\text{M}[0, j] \gets j \cdot \epsilon$
+  \EndFor
+  \For{$i \gets 1$ to $n$} \Comment{Fill in the matrices}
+    \For{$j \gets 1$ to $m$}
+      \State $\text{match} \gets M[i-1, j-1] + score(s_i, v_j)$
+      \State $\text{deletion} \gets M[i-1, j] + \epsilon$
+      \State $\text{insertion} \gets M[i, j-1] + \epsilon$
+      \State $M[i, j] = max(\text{match}, \text{deletion}, \text{insertion})$ \Comment{Save best score}
+    \EndFor
+  \EndFor
+\State \textbf{Traceback}
+\EndFunction
+\end{algorithmic}
+\caption[Needleman-Wunsch Algorithm]{Needleman-Wunsch algorithm. Sequences $s$ and $v$ are aligned with gap penalty $\epsilon$, and matching scoring function score().}\label{alg:nw}
+\end{algorithm}

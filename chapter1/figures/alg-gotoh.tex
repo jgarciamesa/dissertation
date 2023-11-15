@@ -1,0 +1,25 @@
+\begin{algorithm}[hp]
+\setstretch{1.1}
+\begin{algorithmic}[1]
+\Function{alignpair}{$s$, $v$, $\alpha$, $\beta$}
+  \State $n, m \gets |s|, |v|$
+  \State $\text{M, D, I} \gets \operatorname{zero}(n+1, m+1)$ \Comment{Initialize the matrices of size $n+1$ by $m+1$}
+  \For{$i \gets 1$ to $n$} \Comment{Gap deletion penalties}
+    \State $\text{D}[i, 0] \gets \alpha + (i - 1) \cdot \beta$
+  \EndFor
+  \For{$j \gets 1$ to $m$} \Comment{Gap insertion penalties}
+    \State $\text{I}[0, j] \gets \alpha + (j - 1) \cdot \beta$
+  \EndFor
+  \For{$i \gets 1$ to $n$} \Comment{Fill in the matrices}
+    \For{$j \gets 1$ to $m$}
+      \State $D[i, j] = max(M[i-1, j] + \alpha, D[i-1, j] + \beta)$
+      \State $I[i, j] = max(M[i, j-1] + \alpha, I[i, j-1] + \beta)$
+      \State $M[i, j] = max(M[i-1, j-1] + \text{score}(s_i, v_j), D[i, j], I[i, j])$
+    \EndFor
+  \EndFor
+\State \textbf{Add end weights}
+\State \textbf{Traceback}
+\EndFunction
+\end{algorithmic}
+\caption[Gotoh Algorithm]{Gotoh pairwise alignment algorithm. Sequences $s$ and $v$ are aligned with an affine gap penalty with parameters $\alpha$ and $\beta$. Matches and mismatches are scored with the function score().}\label{alg:gotoh}
+\end{algorithm}

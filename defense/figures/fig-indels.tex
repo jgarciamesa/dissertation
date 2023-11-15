@@ -1,0 +1,37 @@
+\newcommand{\gap}{\rule[0.22em]{1.25em}{0.9pt}}
+\newcommand{\e}[1]{\textbf{\textcolor{red}{#1}}}
+% \tikzset{ser/.style={fill=cbColorO}} % s=5
+% \tikzset{his/.style={}} % h=5
+% \tikzset{lys/.style={}} % k=5
+% \tikzset{gly/.style={}} % g=6
+% \tikzset{arg/.style={}} % r=5
+% \tikzset{asp/.style={}} % d=5
+% \tikzset{ala/.style={}} % a=5
+% \tikzset{gln/.style={}} % q=5
+% \tikzset{thr/.style={}} % t=5
+
+\tikzset{aaaln/.style={
+  matrix of nodes,
+  nodes in empty cells,
+  nodes={text width=8mm,align=center},
+  column 1/.style={nodes={align=right}}
+}}
+\large\centering%
+\begin{tikzpicture}
+
+\matrix[aaaln] at (0,0) {
+  A: & SER & HIS &  LYS & GLY & ARG & SER & \gap & ASP & ALA & \gap \\
+  D: & SER & \e{GLN} & \gap & GLY & ARG & SER &  PRO & ASP & ALA & THR \\
+};
+
+\matrix[aaaln,visible on=<2->,row 3/.style={nodes={align=right}}] at (0, -2.5) {
+  A: & TCC & CAT &  AAG & GGG & CGG & TCG & ––– & GAC & GCC & –––\\
+  D: & TCC & CA\e{G} &  ––– & GGG & CGG & TC\e{C} &  CCG & GAC & GCC & ACG \\
+};
+
+\matrix[aaaln,visible on=<3->] at (0, -5) {
+  A: & TCC & CAT & AAG & GGG & CGG & T––\, & –CG & GAC & GCC & –––\\
+  D: & TCC & CA– & ––G & GGG & CGG & TCC & CCG & GAC & GCC & ACG \\
+};
+
+\end{tikzpicture}

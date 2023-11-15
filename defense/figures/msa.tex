@@ -1,0 +1,21 @@
+
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+\begin{tikzpicture}[node distance=1mm,font=\footnotesize]
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells,fill=colorGy!20]
+\newcommand{\A}{\textcolor{colorY}{\textbf{A}}}
+\newcommand{\C}{\textcolor{colorG}{\textbf{C}}}
+\newcommand{\G}{\textcolor{colorB}{\textbf{G}}}
+\newcommand{\T}{\textcolor{colorR}{\textbf{T}}}
+
+\matrix (msa)[aln] {
+\C\A\T & \A\A\G & \C\G\G & \T\C\G & \G\A\C & \verb|---|\\
+\C\A\G & \C\A\G & \C\G\G & \T\C\G & \G\A\C & \A\C\G\\
+\C\A\T & \C\A\G & \C\G\G & \T\C\verb|-| & \verb|--|\C & \A\C\A\\
+\C\A\T & \C\A\G & \C\C\G & \T\C\G & \G\A\C & \A\C\G\\
+};
+\end{tikzpicture}

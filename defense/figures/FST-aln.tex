@@ -1,0 +1,59 @@
+% % !TEX program=lualatex
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorP}{RGB}{152,78,163}   % PURPLE
+\definecolor{colorO}{RGB}{255,127,0}    % ORANGE
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorBn}{RGB}{166,86,40}   % BROWN
+\definecolor{colorPk}{RGB}{247,129,191} % PINK
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+\tikzstyle{line}=[draw, -stealth', very thick]
+\tikzstyle{block}=[circle,fill=colorB!50,on grid,font=\large]
+\tikzstyle{lab}=[]
+\tikzstyle{w}=[lab,midway]
+\tikzstyle{e}=[lab,midway,auto=false,fill=colorP!50,font=\scriptsize]
+
+\begin{tikzpicture}[node distance=40mm, auto,
+	dottedline/.style = {ultra thick, loosely dotted,shorten >=1mm, shorten <=1mm}]
+%%% Legend
+
+%%% Indel FST
+\node[block,align=center,minimum size=40pt] (M) {\textbf{M}};
+\node[block,above right=25mm and 25mm of M,align=center,minimum size=40pt] (I) {\textbf{I}};
+\node[block,below right=25mm and 25mm of M,align=center,minimum size=40pt] (D) {\textbf{D}};
+
+\draw[line] (M) to[out=90,in=180] node[w,left=5mm] {$-:v_j/\delta$} (I);
+\draw[line] (I) to[out=270,in=10] node[w,right=2mm,pos=0.6] {$s_i:v_j/1-\varepsilon$} (M);
+
+\draw[line] (M) to[out=270,in=180] node[w,left=5mm] {$s_i:-/ \delta$} (D);
+\draw[line] (D) to[out=90,in=350] node[w,right=2mm,pos=0.6] {$s_i:v_j /1-\varepsilon$} (M);
+
+\draw[line] (M.135) arc (45:302:7mm) node[w,left] {$s_i:v_j/1-2\delta$};
+\draw[line] (I.45) arc (135:-120:7mm) node[w,right] {$-:v_j/\varepsilon$};
+\draw[line] (D.45) arc (135:-122:7mm) node[w,right] {$s_i:-/\varepsilon$};
+
+\node[font=\footnotesize,text width=50mm,below right=3.75cm and -2.2cm of M] (sequences) {
+\begin{tabular}{r@{\,: }l}
+\multicolumn{2}{l}{\textbf{Sequences}}\\
+    \hline
+	% X & input nucleotides\\
+	% Y & intermediate nucleotides\\
+	$s$ & input sequences\\
+	$v$ & output sequence\\
+	% \O & nothing/empty sequence\\
+\end{tabular}
+};
+
+\node[font=\footnotesize,above right=-1.45cm and -2cm of sequences,text width=50mm] {
+\begin{tabular}{r@{\,: }l}
+\multicolumn{2}{l}{\textbf{Parameters}}\\
+\hline
+	$\delta$ & gap open weight\\
+	$\varepsilon$ & gap extension weight\\
+\end{tabular}
+};
+
+
+\end{tikzpicture}

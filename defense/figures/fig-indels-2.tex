@@ -1,0 +1,59 @@
+%%% Okabe Ito set
+\definecolor{cbColorO}{RGB}{230,159,0}
+\definecolor{cbColorSb}{RGB}{86,180,233}
+\definecolor{cbColorBg}{RGB}{0,158,115}
+\definecolor{cbColorY}{RGB}{240,228,66}
+\definecolor{cbColorBu}{RGB}{0,114,178}
+\definecolor{cbColorV}{RGB}{213,94,0}
+\definecolor{cbColorRp}{RGB}{204,121,167}
+\definecolor{cbColorBk}{RGB}{0,0,0}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\gap}{\rule[0.22em]{1.25em}{0.9pt}}
+\tikzset{aaaln/.style={
+  matrix of nodes,
+  nodes in empty cells,
+  nodes={text width=8mm,align=center},
+  column 1/.style={nodes={align=right}}
+}}
+\large\centering%
+\begin{tikzpicture}
+
+\matrix (table) [aaaln] at (0,0) {
+   &     &|[fill=cbColorSb]|\phantom{|} &|[fill=cbColorSb]|\phantom{|}      &     & &
+   |[fill=cbColorV]|\phantom{|} & |[fill=cbColorV]|\phantom{|} &     &     & |[fill=cbColorRp,text width=16mm]|\phantom{|} \\
+   & ser & his &  lys & gly & arg & \phantom{gly} & \phantom{gly} & asp & ala & \phantom{gly} \\
+A: & TCC & CAT & AAG & GGG & CGG & T––\, & –CG & GAC & GCC & –––\\[1ex]
+D: & TCC & CA– & ––G & GGG & CGG & TCC & CCG & GAC & GCC & ACG \\
+   & ser & \phantom{gly} & \phantom{gly}  & gly & arg & ser & pro & asp & ala & thr \\
+   % &     &\phantom{|} &\phantom{|}      &     & &
+   % \phantom{|} & \phantom{|} &     &     & \phantom{|} \\
+};
+
+\node[fit=(table-2-7)(table-2-8),inner sep=0pt] (a) {};
+\node[fit=(table-5-3)(table-5-4),inner sep=0pt] (b) {};
+\node[fit=(table-1-3)(table-1-4),inner sep=0pt] (p2) {};
+\node[fit=(table-1-7)(table-1-8),inner sep=0pt] (p1) {};
+\node[fit=(table-1-11),inner sep=0pt] (p0) {};
+% \node[fit=(table-6-3)(table-6-4),inner sep=0pt] (t2) {};
+% \node[fit=(table-6-7)(table-6-8),inner sep=0pt] (t1) {};
+% \node[fit=(table-6-11),inner sep=0pt] (t0) {};
+
+
+\node at (a) {ser};
+\node at (b) {gln};
+\node[fill=cbColorSb,text=white] at (p2) {phase 2};
+\node[fill=cbColorV,text=white] at (p1) {phase 1};
+\node[fill=cbColorRp,text=white] at (p0) {phase 0};
+% \node[fill=cbColorSb,text=white] at (t2) {type ii};
+% \node[fill=cbColorV,text=white] at (t1) {type i};
+% \node[fill=cbColorRp,text=white] at (t0) {type i};
+
+\tikzset{abox/.style={inner sep=0pt,ultra thick,rounded corners=1mm}}
+
+\node[fit=(table-1-3)(table-5-4),abox,draw=cbColorSb] {};
+\node[fit=(table-1-7)(table-5-8),abox,draw=cbColorV] {};
+\node[fit=(table-1-11)(table-5-11),abox,draw=cbColorRp] {};
+
+
+\end{tikzpicture}

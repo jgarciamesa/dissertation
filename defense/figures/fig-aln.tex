@@ -1,0 +1,96 @@
+% !TEX program=lualatex
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorP}{RGB}{152,78,163}   % PURPLE
+\definecolor{colorO}{RGB}{255,127,0}    % ORANGE
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorBn}{RGB}{166,86,40}   % BROWN
+\definecolor{colorPk}{RGB}{247,129,191} % PINK
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+\definecolor{asublue}{RGB}{0,163,224}
+%%% Okabe Ito set
+\definecolor{cbColorO}{RGB}{230,159,0}
+\definecolor{cbColorSb}{RGB}{86,180,233}
+\definecolor{cbColorBg}{RGB}{0,158,115}
+\definecolor{cbColorY}{RGB}{240,228,66}
+\definecolor{cbColorBu}{RGB}{0,114,178}
+\definecolor{cbColorV}{RGB}{213,94,0}
+\definecolor{cbColorRp}{RGB}{204,121,167}
+\definecolor{cbColorBk}{RGB}{0,0,0}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells]
+%\tikzstyle{best}=[fill=asublue!20,rounded corners]
+\tikzstyle{best}=[rounded corners]
+\tikzstyle{lab}=[font=\normalsize]
+\tikzstyle{indel}=[ultra thick, rounded corners]
+\tikzstyle{phase0}=[draw=cbColorRp]
+\tikzstyle{phase1}=[draw=cbColorV]
+\tikzstyle{phase2}=[draw=cbColorSb]
+
+\newcommand{\e}[1]{\textbf{\textcolor{colorR}{#1}}}
+
+% \begin{document}
+\begin{tikzpicture}[node distance=5mm,font=\footnotesize]
+
+\node (titleBiology) {\textbf{Biology}};
+% biology
+\matrix (biology)[aln,best,above right=-2.4cm and -1.2cm of titleBiology.west] {
+   & ser & his & lys & gly & arg &            &            & asp & ala & \\
+A: & TCC & CAT & AAG & GGG & CGG & T\verb|--| & \verb|-|CG & GAC & GCC & \verb|---|\\
+D: & TCC & CA\verb|-| & \verb|--|G & GGG & CGG & TCC & CCG & GAC & GCC & ACG\\
+   & ser &            &            & gly & arg & ser & pro & asp & ala & thr\\
+};
+\node (bio17) [fit=(biology-1-7)(biology-1-8)]{Ser};
+\node [fit=(biology-4-3)(biology-4-4)]{Gln};
+\draw [indel,phase1] (biology-2-7.north west) rectangle (biology-3-8.south east);
+\draw [indel,phase0] (biology-2-11.north west) rectangle (biology-3-11.south east);
+\draw [indel,phase2] (biology-2-3.north west) rectangle (biology-3-4.south east);
+
+% \node (titlePrankMacse) [below right=2.6cm and -1.8cm of titleBiology] {\textbf{b) PRANK (codon) and MACSE}};
+\node (titlePrankMacse) [below right=2.4cm and -1.3cm of titleBiology] {\textbf{PRANK (codon) and MACSE}};
+% prank codon --gaprate=0.01
+\matrix (prank-macse) [aln,above right=-2.4cm and -1.2cm of titlePrankMacse.west] {
+   & ser & his     & lys & gly  & arg & ser &           & asp & ala & \\
+A: & TCC & CAT     & AAG & GGG  & CGG & TCG &\verb|---| & GAC & GCC & \verb|---|\\
+D: & TCC & CA\e{G} & \verb|---| & GGG & CGG & TC\e{C} & CCG & GAC & GCC & ACG\\
+   & ser & gln     &            & gly     & arg & ser   & pro  & asp & ala & thr\\
+};
+\draw [indel,phase0] (prank-macse-2-8.north west) rectangle (prank-macse-3-8.south east);
+\draw [indel,phase0] (prank-macse-2-11.north west) rectangle (prank-macse-3-11.south east);
+\draw [indel,phase0] (prank-macse-2-4.north west) rectangle (prank-macse-3-4.south east);
+
+\node (titleMafftClustalo) [below right=2.4cm and -4cm of titlePrankMacse] {\textbf{MAFFT and Clustal$\pmb{\Omega}$}};
+% mafft dna & clustalo amino acids
+\matrix(mafft-clustalo) [aln,above right=-2.4cm and -1.2cm of titleMafftClustalo.west] {
+   & ser & his     & lys     & gly     & arg     & ser & asp & ala & \\
+A: & TCC & CAT & AAG & GGG     & CGG     & TCG & GAC & GCC & \verb|---|\\
+D: & TCC & CA\e{G}     & \e{GG}G     & \e{C}GG & \e{TCC} & \e{C}CG & GAC & GCC & ACG\\
+   & ser & gln     & gly     & arg     & ser     & pro & asp & ala & thr\\
+};
+\draw [indel,phase0] (mafft-clustalo-2-10.north west) rectangle (mafft-clustalo-3-10.south east);
+
+% \node (titleCoati) [below right=2.4cm and -3cm of titleMafftClustalo] {\textbf{COATi}};
+% % coati mar-mg
+% \matrix (coati) [aln,best,above right=-2.4cm and -1.2cm of titleCoati.west] {
+%    & Ser & His & Lys & Gly & Arg &            &            & Asp & Ala & \\
+% A: & TCC & CAT & AAG & GGG & CGG & T\verb|--| & \verb|-|CG & GAC & GCC & \verb|---|\\
+% D: & TCC & CA\verb|-| & \verb|--|G & GGG & CGG & TCC & CCG & GAC & GCC & ACG\\
+%    & Ser &            &            & Gly & Arg & Ser & Pro & Asp & Ala & Thr\\
+% };
+% \node (cti17) [fit=(coati-1-7)(coati-1-8)]{Ser};
+% \node [fit=(coati-4-3)(coati-4-4)]{Gln};
+% \draw [indel,phase1] (coati-2-7.north west) rectangle (coati-3-8.south east);
+% \draw [indel,phase0] (coati-2-11.north west) rectangle (coati-3-11.south east);
+% \draw [indel,phase2] (coati-2-3.north west) rectangle (coati-3-4.south east);
+
+%%%%%
+
+% \draw (a.north west) node[lab,anchor=center] (dlab) {\textbf{a)}};
+% \draw (dlab |- c.north west) node[lab,anchor=center] {\textbf{b)}};
+
+% \node[] () [below = 0.2em] at (coati.south) {};
+
+\end{tikzpicture}
+% \end{document}

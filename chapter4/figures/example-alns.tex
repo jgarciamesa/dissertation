@@ -1,0 +1,17 @@
+\begin{tikzpicture}[node distance=5mm,font=\footnotesize]
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells]
+
+\matrix (aln1)[aln] {
+ \textbf{Aln 1} & & & & & &\\
+CAT & AAG & CGG & TCG & GAC & \verb|---| &\\
+CAG & CGG & TCC & CCG & GAC & ACG &\\
+\\
+ \textbf{Aln 2} & & & & & &\\
+CAT & AAG & CGG & TC\verb|-| & \verb|--|G & GAC & \verb|---|\\
+CA\verb|-| & \verb|--|G & CGG & TCC & CCG & GAC & ACG\\
+\\
+ \textbf{Aln 3} & & & & & &\\
+CAT & AAG & CGG & TC\verb|-| & \verb|--|G & GAC &\\
+CAG & CGG & TCC & CCG & GAC & ACG &\\
+};
+\end{tikzpicture}

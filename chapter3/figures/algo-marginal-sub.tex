@@ -1,0 +1,24 @@
+\begin{algorithm}[!ht]
+\setstretch{1.1}
+\begin{algorithmic}[1]
+\Function{marginal-substitution}{$P_{tri}$, $\pi$}
+  \State \textbf{Create} the substitution matrix of size 183x4
+  \State $P_{apx} \gets \operatorname{zero}(n+1, m+1)$
+  \For{cod $\gets 1$ to $61$}
+    \For{nuc $\gets 1$ to $4$}
+      \For{pos $\gets 1$ to $3$}
+        \State tmp $\gets 0$
+        \For{i $\gets 1$ to $61$}
+          \If{get\_nuc(i, pos) == nuc}
+            \State tmp $\otimes= P_{tri}[$cod, i$]$
+          \EndIf
+        \EndFor
+        \State $P_{apx}[$cod $\cdot 3 + $pos, nuc$] = \log \left( \frac{\text{tmp}}{\grande{\pi_{nuc}}} \right)$ 
+      \EndFor
+    \EndFor
+  \EndFor
+  \State \Return $P_{apx}$
+\EndFunction
+\end{algorithmic}
+\caption[Marginal Substitution Pseudocode]{Marginal substitution algorithm. Substitution probabilities for the triplet model are in $P_{tri}$, and $\pi$ contains nucleotide frequencies.}\label{alg:marginal-sub}
+\end{algorithm}

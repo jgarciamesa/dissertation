@@ -1,0 +1,19 @@
+\definecolor{bestcolor}{RGB}{230,230,230}
+\newcommand*\pct{\scalebox{.9}{\%}}
+
+\begingroup\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{r|ccccc}
+      & \textbf{COATi} & \textbf{MAFFT} & \textbf{PRANK\textsuperscript{*}} & \textbf{MACSE} & \textbf{Clustal$\Omega$}\\
+\hline
+Method    & Trip-MG & DNA & Codon & DNA+AA & AA\\[2pt]
+Distance metric $d_{seq}$ & \cellcolor{bestcolor}0.00217 & 0.01445 & 0.02126 & 0.01340 & 0.02860\\
+Best alignments & \cellcolor{bestcolor}5162 & 1450 & 1958 & 3934 & 2711\\
+Perfect alignments & \cellcolor{bestcolor}5870 & 5450 & 4942 & 2966 & 3034\\
+Imperfect alignments & \cellcolor{bestcolor}1030 & 1450 & 1958 & 3934 & 3866\\
+% \hline
+F1 positive selection & \cellcolor{bestcolor}98.5\pct & 84.7\pct & 89.8\pct & 79.6\pct & 68.1\pct \\
+F1 negative selection & \cellcolor{bestcolor}99.9\pct & 98.5\pct & 99.0\pct & 98.3\pct & 97.0\pct
+\end{tabular}
+\par\endgroup
+

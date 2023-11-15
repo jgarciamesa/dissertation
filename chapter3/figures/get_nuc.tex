@@ -1,0 +1,13 @@
+\newcommand{\blue}[1]{\textbf{\textcolor{blue}{#1}}}
+\newcommand{\purple}[1]{\textbf{\textcolor{purple}{#1}}}
+\newcommand{\orange}[1]{\textbf{\textcolor{orange}{#1}}}
+
+\begingroup\centering
+\begin{tabular}{c|c|c|c|c}
+Codon & uchar & Position & Mask & uchar \& mask $\gg$ shift = Nucleotide\\
+\hline
+\blue{A}\purple{C}\orange{G} & 00 \blue{00} \purple{01} \orange{10} & 0 & 00 \textbf{11} 00 00 & 00 \blue{00} 00 00 $\gg$ 4 \hspace{0.8em}= \blue{00} (\blue{A})\\
+\blue{A}\purple{C}\orange{G} & 00 \blue{00} \purple{01} \orange{10} & 1 & 00 00 \textbf{11} 00 & 00 00 \purple{01} 00 $\gg$ 2 \hspace{0.8em}= \purple{01} (\purple{C})\\
+\blue{A}\purple{C}\orange{G} & 00 \blue{00} \purple{01} \orange{10} & 2 & 00 00 00 \textbf{11} & 00 00 00 \orange{10} $\gg$ 0 \hspace{0.8em}= \orange{10} (\orange{G})\\
+\end{tabular}
+\par\endgroup

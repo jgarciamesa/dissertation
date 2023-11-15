@@ -1,0 +1,74 @@
+\chapter{INTRODUCTION}
+\label{ch:intro}
+
+% DNA and the high degree of \textbf{organized complexity of life} - storage and replication
+% mutations, which lead to changes that can be favorable or detrimental, need to be prevented
+Deoxyribonucleic acid (DNA) is considered the fundamental blueprint of life, with the primary purpose of storing and replicating the vital information required for the structure, function, and regulation within living organisms. In essence, DNA functions as the hard drive of nature, preserving the intricate details of the processes of life against data corruption events known as mutations. While cellular mechanisms exist to prevent and correct such errors, a fraction inevitably persists and eventually fixates in the population, contributing to the diversity of life through evolution.
+
+% biological sequences
+% central dogma of biology - with figures
+% RNA, proteins
+Biological sequences are a collection of DNA molecules that carry genetic instructions across generations. DNA replicates itself and, through RNA, codes for proteins, which are responsible for virtually all chemical processes in organisms. The conservation of patterns in the three levels of biological information is paramount to enforce correct function preservation. Sequence analysis is the area of research within biology that studies the changes in DNA, RNA, and proteins.
+
+% define sequence alignment in general CS and then in biology
+Sequence alignment establishes a correspondence between the elements in a set of sequences that share a common ancestor and is the standard method to compare biological sequences. The alignment of DNA regions that code for proteins is typically performed in amino-acid space, which discards information, underperforms compared to alignment at the codon level, and can fail in the presence of artifacts. While some aligners incorporate codon substitution models, they do not support frameshifts or lack a statistical model. In addition, existing aligners typically force gaps to occur between codons, whereas in natural sequences, only about 42\% of indels occur between codons \citep{taylor2004occurrence,zhu2022profiling}.
+
+Throughout the following chapters, I describe the various intricacies and characteristics of models of molecular evolution, insertion and deletion (indel) models, and pairwise alignment algorithms. To do so, I must first set some definitions.
+
+\section{Notation}
+
+An \textbf{alphabet}, denoted by $\grande{\Sigma}$, is a finite and unordered set of symbols. Let the DNA alphabet be defined
+\[ \grande{\Sigma}_{DNA} = \{ A, C, G, T \} \]
+and the codon alphabet be all possible three-mers over the $\grande{\Sigma}_{DNA}$ alphabet, defined
+
+\begin{align*}
+\allowdisplaybreaks
+\grande{\Sigma}_{codon} = \{&AAA, AAC, AAG, AAT, ACA, ACC, ACG, ACT,\\
+                   &AGA, AGC, AGG, AGT, ATA, ATC, ATG, ATT,\\
+                   &CAA, CAC, CAG, CAT, CCA, CCC, CCG, CCT,\\
+                   &CGA, CGC, CGG, CGT, CTA, CTC, CTG, CTT,\\
+                   &GAA, GAC, GAG, GAT, GCA, GCC, GCG, GCT,\\
+                   &GGA, GGC, GGG, GGT, GTA, GTC, GTG, GTT,\\
+                   &TAA, TAC, TAG, TAT, TCA, TCC, TCG, TCT,\\
+                   &TGA, TGC, TGG, TGT, TTA, TTC, TTG, TTT\}
+\end{align*}
+
+\noindent where, given a codon $X = \{X_1 X_2 X_3\} \in \grande{\Sigma}_{codon}$, $X_p$ denotes the nucleotide in position $p$ of codon $X$. I often refer to symbols in $\grande{\Sigma}_{DNA}$ as nucleotides or residues and symbols in $\grande{\Sigma}_{codon}$ as codons for convenience. In addition, an alphabet can be extended to include gaps $\grande{\Sigma} \cup \{-\}$ or have symbols removed $\grande{\Sigma}_{codon} - \{\text{TAA, TAG, TGA} \}$, in this case to indicate non-stop codons.
+
+A \textbf{sequence} is a finite succession of the symbols in $\Sigma$. Given a sequence $s$ of length $m$, I use $s_1 s_2 \cdots s_{m}$ to denote the symbols in $s$. The special case when a sequence contains no symbols is denoted $\varnothing$. In addition, let $|s|$ denote the length of sequence $s$. Furthermore, a \textbf{subsequence} of $s$ is obtained by extracting zero or more symbols from $s$.
+
+An \textbf{alignment} of sequences $s$ and $v$ is a two-row matrix $A$ with entries in $\grande{\Sigma} \cup \{-\}$ that meets three requirements: (i) the first and second row contain the symbols in $s$ and $v$ in order, respectively; (ii) one or more gaps $\{-\}$ are allowed between symbols in $s$ and $v$; and (iii) every column contains at least one symbol in $s$ or $v$, therefore a column comprised entirely of gaps is not allowed \citep{orlova2010mathematical}. The alignment of two sequences is referred to as a pairwise alignment, whereas a multiple alignment contains three or more sequences.
+
+Biologically, entries in an alignment can be seen as four events:
+\begin{itemize}
+    \item No mutation: a residue remains unchanged.
+    \item Substitutions: a residue is replaced by another.
+    \item Insertions: a residue is added to a sequence in a specific position.
+    \item Deletions: a residue is removed from a sequence.
+\end{itemize}
+
+% In addition, the DNA and codon alphabets include the symbol ``-'', which denotes a space.
+
+\section{Pairwise Sequence Alignment Algorithms}
+% \cyan{Explain Gotoh with pseudocode, equations, and grid figures (?).}
+
+\subsubsection{Needleman-Wunsch}
+
+% Pairwise sequence alignment algorithms can be divided into global and local. Local alignment algorithms focus on identifying high-similarity regions among their subsequences.
+Global pairwise alignment aims to find the optimal alignment of two sequences, providing a comprehensive view of their similarity. A classic global alignment algorithm is the Needleman-Wunsch (NW) algorithm, which calculates the optimal alignment that maximizes the similarity of two sequences using dynamic programming \citep{Needleman1970}.
+Dynamic programming is used to build an optimal alignment using previous solutions for optimal alignments of smaller subsequences.
+% Dynamic programming is a computational technique that applies a divide-and-conquer approach to break down a problem into smaller subproblems, where the combination of optimal subproblem solutions leads to the general optimal solution.
+
+\input{chapter1/figures/alg-nw}
+
+Given two sequences $s, v \in \grande{\Sigma}$ with lengths $m$ and $n$, respectively, the NW algorithm sets a matrix $M$ with dimensions $m+1$ by $n+1$. The algorithm fills the matrix using a function \verb|score()| that assigns values to matches and mismatches and gap cost ($\epsilon$). Starting from the top-left to the bottom-right corner, row by row the score for each cell represents the optimal alignment score up to that position. The score for each cell is calculated by maximizing values from adjacent cells in three directions: diagonal for matches and mismatches, and up or down for indels. Algorithm \ref{alg:nw} illustrates the NW algorithm. In addition, the algorithm performs a traceback operation to retrieve the optimal path and construct the aligned sequences.
+
+% If I have time, I should draw some grid figures.
+
+\subsubsection{Gotoh Algorithm}
+
+The Gotoh algorithm \citep{gotoh_1982} is an extension of the NW algorithm that adds affine gap penalties. While the latter applies a constant penalty for each gap, the former applies an affine gap penalty model with different opening and extension gap penalties (i.e., a gap of length $l$, $score = open + extend \cdot (l - 1)$ ). Affine gap penalties provide a more biological model where longer gaps are less penalized per column. In addition, the Gotoh algorithm can distinguish between insertions and deletions.
+
+Algorithmically, this is translated into using three separate matrices to keep score of matches ($M$), deletions ($D$), and insertions ($I$). The matrix is filled similarly to the NW algorithm, row by row from the top-left to the bottom-right corner. Deletion and insertion openings originate from the match matrix, while gap extensions originate from their respective matrices ($D$ and $I$). Algorithm \ref{alg:gotoh} illustrates the Gotoh algorithm, with $\alpha$ and $\beta$ as gap opening and extension costs, and the function \verb|score()| that scores matches and mismatches. Note that the traceback algorithm is adapted to retrieve the optimal alignment through the tree matrices instead of one.
+
+\input{chapter1/figures/alg-gotoh}

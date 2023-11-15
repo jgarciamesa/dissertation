@@ -1,0 +1,1230 @@
+\documentclass[aspectratio=169,font=14pt]{beamer}
+% \documentclass[notes=only]{beamer}
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{amsmath}
+\usepackage[export]{adjustbox}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{graphicx}
+\graphicspath{{defense/}}
+\usepackage{pgfpages}
+% \usepackage[style=nature,citestyle=numeric]{biblatex}
+\usepackage[export]{adjustbox}
+\usepackage{appendixnumberbeamer}
+\usepackage{relsize}
+% \usepackage[threecols]{hackthefootline}
+\usepackage{tikzlings}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage[hang]{footmisc}
+\usepackage{bm}
+\usepackage{colortbl}
+\usepackage{fontawesome}
+\usetikzlibrary{shapes,arrows,calc,positioning,matrix,fit}
+\usetikzlibrary{decorations,backgrounds}
+\usetikzlibrary{decorations.pathreplacing,decorations.markings,decorations.pathmorphing}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{overlay-beamer-styles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\usepackage{url}
+\urlstyle{same}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[default]{sourcesanspro}
+\usepackage{contour}
+\usepackage{textcomp}
+\usepackage{multirow}
+\usepackage{fancyvrb}
+\usepackage{ulem}
+\usepackage{xpatch}
+\usepackage{algpseudocode}
+
+\usepackage{pgf}
+\usepackage{alphalph}
+\usepackage{fancybox}
+\usetikzlibrary{calc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\usefonttheme{professionalfonts}
+\usetheme{Boadilla}
+
+\setbeamercolor{title}{parent=author in head/foot}
+
+% \addbibresource{refs.bib}
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+% \beamertemplatenavigationsymbolsempty
+\hypersetup{pdfstartview={Fit}} % fits the presentation to the window when first displayed
+% \emergencystretch=1em
+
+% \setbeameroption{hide notes} % Only slides
+% \setbeameroption{show only notes} % Only notes
+% \setbeameroption{show notes on second screen=right} % Both
+
+% Give a slight yellow tint to the notes page
+% \setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+
+% \htfconfig{title=short, authinst=instpths, date=none, framenrs=fraction}
+% \addtobeamertemplate{frametitle}{}{\vspace{-1em}} % decrease
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\TODO}[1]{\textcolor{red}{TODO: #1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand*\pct{\scalebox{.9}{\%}}
+\newcommand{\inlinefigure}[1]{%
+  \begingroup\normalfont
+  \includegraphics[height=\fontcharht\font`\B]{#1}%
+  \endgroup
+}
+\newcommand{\grande}[1]{\mathlarger{\mathlarger{#1}}}
+
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize item}{}
+\setbeamercolor{itemize subitem}{fg=blue!75}
+\setlength\leftmargini{0pt}
+
+\makeatletter
+\patchcmd{\@listI}{\itemsep3\p@ \@plus2\p@ \@minus3\p@}{\itemsep3\p@ \@plus1fill \@minus3\p@}{}{}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Title information ------------------------------------------------------------
+\title[Pairwise Alignment of CDS]{\textbf{Statistical Sequence Alignment of Protein Coding Regions}}
+\titlegraphic{%
+\vspace*{-4em}\begin{tikzpicture}
+    \draw node[anchor=south west] at ($(current page.south west)+(5mm,5mm)$)
+    {\pgfimage[height=15mm]{defense/images/biodesign_logo.png}};
+    \draw node[anchor=south east] at ($(current page.south east)+(-5mm,5mm)$)
+    {\pgfimage[height=15mm]{defense/images/fulton_logo.png}};
+\end{tikzpicture}
+% \vspace{-4em}\includegraphics[width=0.3\linewidth,height=2cm]{images/biodesign_logo.png}%
+% \hspace{4cm}%
+% \vspace{-4em}\includegraphics[width=0.35\linewidth,height=2cm]{images/fulton_logo.png}%
+}
+\author[JJ García Mesa]{~\\%
+~\\%
+~\\%
+Juan José García Mesa\\
+~\\
+~\\
+{\small Reed Cartwright, chair\\
+Banu Ozkan\\
+Jay Taylor\\
+Ted Pavlic\\}}
+
+% \date{2023/10/25}
+\date{}
+% \titlegraphic{\includegraphics[width=.3\linewidth]{}}
+%-------------------------------------------------------------------------------
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,leftskip=2ex,rightskip=2ex,sep=0pt]{date in head/foot}%
+    \hfill%
+    \usebeamerfont{date in head/foot}%
+    \raisebox{-0.1\height}{\faicon{github}}~jgarciamesa%
+    \hfill%
+    \usebeamercolor[fg]{page number in head/foot}%
+    \usebeamerfont{page number in head/foot}%
+    \usebeamertemplate{page number in head/foot}%
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+%-------------------------------------------------------------------------------
+
+\begin{document}
+\maketitle
+
+\begin{frame}[t]{Protein Coding Regions} %-----------------------------------------
+\begin{columns}[T]
+    \column{0.5\textwidth}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Coding regions (CDS) are DNA sequences that code for proteins.
+        \item Proteins are chains of amino acids responsible for virtually all chemical processes in living organisms.
+        \item A codon is a sequence of three nucleotides that encode a particular amino acid.
+    \end{itemize}
+    \centering
+    \vspace{3em}
+    \only<2>{\resizebox{0.9\textwidth}{!}{\input{defense/figures/CDS}}}
+  \column{0.5\textwidth}
+    \centering
+    \includegraphics<1>[height = 0.75\textheight]{defense/images/translation.jpg}
+    \includegraphics<2>[width = 0.9\textwidth]{defense/images/codon-table.png}
+    \only<1>{\footnotetext{\tiny{Clancy S, Brown W (2008) Translation: DNA to mRNA to Protein}}}
+    \end{columns}
+\note[item]{Coding regions are DNA sequences that, through various mechanisms such as transcription and translation, code for proteins, which are chains of amino acids responsible for virtually all the chemical processes in living organisms.}
+\note[item]{Codons are sets of three nucleotides that encode for amino acids.}
+\note[item]{Protein coding regions start with a special start codon and end with one of three possible stop codons.}
+\end{frame} %------------------------------------------------------------------
+
+\begin{frame}{Protein Coding Regions} %----------------------------------------
+\begin{columns}[T]
+    \setlength{\topsep}{0pt}
+    \setlength{\partopsep}{0pt}
+  \column{0.3\textwidth}
+    \textbf{Human Health}
+    \vspace{0.8em}
+    \begin{itemize}
+        \item Personalized medicine
+        \item Drug discovery
+        \item Identification of disease-associated mutations
+    \end{itemize}
+    \begin{tikzpicture}[remember picture, overlay, on background layer]
+        \draw node at ($(current page.center)+(-5.4cm,-2.8cm)$) {\pgfimage[height=15mm]{images/personalized.png}};
+    \end{tikzpicture}
+    \centering
+  \column{0.35\textwidth}
+    \textbf{Evolution}
+    \vspace{0.8em}
+    \begin{itemize}
+        \item Phylogenetic inference
+        \item Measurement of selection
+    \end{itemize}
+    \begin{tikzpicture}[remember picture, overlay, on background layer]
+        \draw node at ($(current page.center)+(0cm,-2.8cm)$) {\pgfimage[height=15mm]{images/phylogenetics.png}};
+    \end{tikzpicture}
+  \column{0.3\textwidth}
+    \textbf{Genomics}
+    \vspace{0.8em}
+    \begin{itemize}
+        \item Gene annotation
+        \item Reference mapping
+    \end{itemize}
+    \begin{tikzpicture}[remember picture, overlay, on background layer]
+        \draw node at ($(current page.center)+(5.6cm,-2.8cm)$) {\pgfimage[height=15mm]{images/genetics.png}};
+    \end{tikzpicture}
+  % \column{0.6\textwidth}
+  %   \centering
+  %   \includegraphics[height = 0.8\textheight]{defense/images/translation.jpg}
+  %   % https://www.nature.com/scitable/topicpage/translation-dna-to-mrna-to-protein-393/
+  %   % \includegraphics<2>[height = 0.8\textheight]{defense/images/translation-detail.jpg}
+  %   \footnotetext{\tiny{Clancy S, Brown W (2008) Translation: DNA to mRNA to Protein}}
+\end{columns}
+\note[item]{The study of CDS is important for human health fields such as personalized medicine, drug discovery, and the identification of disease-associated mutation; used in the study of evolution such as phylogenetic inference and measurement of selection; and in genomics for gene annotation or reference mapping.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t]{Sequence Alignment} %---------------------------------------------
+\begin{columns}
+\column{0.6\textwidth}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Hypothesis of which residues in two or more sequences are related by common descent.
+        \item One of the most fundamental computational steps in most genomic analyses.
+        \item Remains an important problem in computational biology and bioinformatics.
+        % \item \textbf{How:} alignments of sequences are not observed directly and must be inferred from data using algorithms.
+    \end{itemize}
+\column{0.4\textwidth}
+    \centering
+    \input{defense/figures/aln}
+\end{columns}
+\vspace{2em}
+\begin{block}{\textbf{Goal}}
+    Reduce errors in sequence alignment to improve downstream analyses.
+\end{block}
+\note[item]{Sequence alignment is the hypothesis of which residues in 2 or more sequences are related by common descent and is a fundamental step in genomic analyses, including the ones I just mentioned.}
+\note[item]{Alignments of sequences are not observed directly and must be inferred from data using algorithms, which can introduce errors that impact the results of downstream analyses.}
+\note[item]{The goal of this project is to reduce errors. Let me illustrate some of the issues of current aligners with an example.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame} %--------------------------------------------------------
+\input{defense/figures/fig-indels}
+\note[item]{Here, we have an alignment of amino acids with some insertions and deletions and one mismatch (in red).}
+\note[item]{Now, let's look at the DNA level. We have another (synonymous) mismatch!}
+\note[item]{If we now consider the alignment at the DNA level, we can find a better alignment without mismatches.}
+\note[item]{It's important to look at the DNA level.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame} %--------------------------------------------------------
+\input{defense/figures/fig-indels-2}
+\note[item]{The indel phases are categorized based on their position, phase 0 takes an entire codon, phases 1 and 2 start after 1 or two nucleotides, respectively.}
+\note[item]{This is why it's important to look at the nucleotide level.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Artifacts in Genomic Data} %--------------------------------------
+\begin{columns}
+    \column{0.4\textwidth}
+    Existing alignments have issues when aligning CDS in the presence of \textbf{artifacts}, common in non-model organisms.
+    \vspace{1em}
+    \begin{itemize}
+    \setlength\itemsep{1em}
+        \item Based on amino acid translations
+        \item Only model phase 0 indels
+        \item Trouble with early stop codons
+        \item Lack a statistical model
+    \end{itemize}
+    \column{0.6\textwidth}
+    \hspace{-6mm}\resizebox{\textwidth}{!}{\input{figures/fig-aln}}
+\end{columns}
+
+\note[item]{Current coding sequence aligners don't model correctly within codon
+	gaps and frameshifts because generally alns are done based on amino acid
+	translations.}
+\note[item]{Errors can impact downstream analyses and their conclusions.}
+\note[item]{Comment on the alignments by the different tools.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{COATi} %--------------------------------------------------
+    COdon-aware Alignment Transducer
+\begin{columns}[c]
+    % \setstretch{1.5}
+    \column{0.4\textwidth}
+    \vspace{1em}
+    \begin{itemize}
+    \setlength\itemsep{1em}
+        \item Codon evolution
+        \item Indel model --- all phases
+        \item Models artifacts
+        \item Finite state transducers
+    \end{itemize}
+    \column{0.6\textwidth}
+    \hspace{-4mm}\resizebox{\textwidth}{!}{\input{defense/figures/fig-aln-coati}}
+    \vspace{2em}
+\end{columns}
+\begin{tikzpicture}[remember picture, overlay, on background layer]
+    \draw node at ($(current page.center)+(-1.6cm,-2.7cm)$) {\pgfimage[height=30mm]{images/coati_psf.jpg}};
+\end{tikzpicture}
+\note[item]{I developed COATi, a statistical aligner that incorporates a codon evolution model, an indel model that allows gaps of all phases, models artifacts such as early stop codons, and is based on finite state transducers (more on that in the next slides).}
+\note[item]{COATi, which are also cute mammals native to south and central america and the southwest US, can find the most parsimonius alignment.}
+\end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Notation} %-------------------------------------------------------
+% \begin{itemize}
+%     \setlength\itemsep{1em}
+%     \item \textbf{DNA alphabet}: $\grande{\Sigma}_{DNA} = \{A, C, G, T\}$.
+%     \item \textbf{Codon alphabet}: $\grande{\Sigma}_{codon}$ all three-mers in $\grande{\Sigma}_{DNA}$,
+%     where $X \in \grande{\Sigma}_{codon} = \{X_0 X_1 X_2\}$.
+%     \item \textbf{Sequence}: finite succession of symbols in $\grande{\Sigma}$. Sequence $s$ of length $m$ is represented $s_0s_1 \cdots s_{m-1}$.
+% \end{itemize}
+% \end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Statistical Alignment} %------------------------------------------
+\begin{columns}[c]
+  \column{0.4\textwidth}
+    Typical statistical pairwise alignment uses \textbf{pair-hidden Markov models} (pair-HMMs).
+    \vspace{1em}
+    \begin{itemize}
+    \setlength\itemsep{1em}
+        \item Generate two sequences from an unknown ancestor.
+        \item Alignment represents the probability that the sequences are related.
+        \item Moore machine with states that emit symbols to two output tapes $(s_i, v_j)$.
+    \end{itemize}
+  \column{0.6\textwidth}
+    \resizebox{\textwidth}{!}{\input{defense/figures/pair-hmm}}
+    \footnotetext{\tiny{Do CB et al., ProbCons: Probabilistic consistency-based multiple sequence alignment}}
+\end{columns}
+\note[item]{Statistical alignment, which uses models that assign probabilities to evolutionary events, is typically done using pair-hidden Markov models.}
+\note[item]{Generate 2 sequences from un unknown ancestor and the alignment represents the probability that the sequences are related.}
+\note[item]{Describe figure; moore machine with states match, insertion, and deletion that emit symbols (nucleotides or amino acids) to two output tapes (the two sequences).}
+\note[item]{Extra info: Markov process is a stochastic model describing a sequence of possible events in which the probability of each event depends only on the state attained in the previous event.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Finite State Transducers} %---------------------------------------
+\begin{columns}
+    \column{0.5\textwidth}
+    \vspace{1em}
+    \begin{itemize}
+        \setlength\itemsep{0.75em}
+        \item FSTs have similar benefits to pair-HMMs in addition to well-defined algorithms for combining them.
+        \item Generates a descendant sequence given an ancestral one.
+    \end{itemize}
+    \column{0.5\textwidth}
+    \begin{itemize}
+        \setlength\itemsep{0.75em}
+        \item Alignment represents the conditional probability that sequence $v$ evolved from $s$.
+        \item Mealy machine with arcs that absorbs symbols from input tape and emits to output tape $(s_i:v_j)$.
+    \end{itemize}
+\end{columns}
+\vfill
+\centering
+\hspace*{-3em}\resizebox{0.8\textwidth}{!}{\input{defense/figures/complimenting}}
+\note[item]{Read points.}
+\note[item]{Here I have an example of an FST that produces the DNA complement of a codon.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Finite State Transducers} %------------------------------------
+\vspace{1em}
+{\centering
+% \only<1>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-0}}}
+% \only<2>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-1}}}
+% \only<3>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-2}}}
+% \only<4>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-3}}}
+% \only<5>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-4}}}
+% \only<6>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-intro/fst-5}}}
+\only<1>{\input{defense/figures/fst-intro/fst-0}}
+
+\only<2>{\input{defense/figures/fst-intro/fst-1}}
+
+\only<3>{\input{defense/figures/fst-intro/fst-2}}
+
+\only<4>{\input{defense/figures/fst-intro/fst-3}}
+
+\only<5>{\input{defense/figures/fst-intro/fst-4}}
+
+\only<6>{\input{defense/figures/fst-intro/fst-5}}
+
+}
+\end{frame} %------------------------------------------------------------------
+
+\begin{frame}[t]{FST---Composition} %------------------------------------------
+\begin{itemize}
+    \setlength\itemsep{1em}
+    \item Creates a new transducer by using the output of an FST as the input of another.
+    \item Allows combining transducers that represent specific processes.
+\end{itemize}
+\vspace*{1em}
+\centering
+\only<2>{\hspace{-2em}\resizebox{0.85\textwidth}{!}{\input{defense/figures/transcription}}}
+\note[item]{A powerful algorithm is composition, which creates a new transducer by using the output of one FST as the input of another. This allows creating complex FST models by combining smaller simpler ones.}
+\note[item]{Here, I have an example of how composing an FST to perform the DNA complement of a codon with one that replaces thymine with uracil creates a transducer that performs DNA transcription.}
+\end{frame} %------------------------------------------------------------------
+
+\begin{frame}[c]{FST---Composition} %------------------------------------------
+\centering{
+\only<1>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst0}}}
+
+\only<2>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst1}}}
+
+\only<3>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst2}}}
+
+\only<4>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst3}}}
+
+\only<5>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst4}}}
+
+\only<6>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst5}}}
+
+\only<7>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst6}}}
+
+\only<8>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst7}}}
+
+\only<9>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst8}}}
+
+\only<10>{\resizebox{\textwidth}{!}{\input{defense/figures/fst-comp/comp-fst9}}}
+
+}
+\end{frame} %-----------------------------------------------------------------
+
+\begin{frame}{Evolution FST} %------------------------------------------------
+\begin{itemize}
+    \item Evolution FST is the statistical model used to align sequences in COATi.
+    \item Evolution FST is the composition of 2 transducers
+    \vspace{1em}
+    \begin{itemize}
+        \setlength\itemsep{2em}
+        \item Substitution transducer: codon model designed for protein-coding regions
+        \item Indel transducer: DNA-based geometric model that allows frameshifts
+        % \item Base calling error transducer.
+    \end{itemize}
+\end{itemize}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t]{Substitution Model} %------------------------------------------
+\begin{itemize}
+    \item Codon model with 61x61 probabilities ($x, y$ are  non-stop codons).
+    \item Mechanistic Muse and Gaut (MG94) + General Time Reversible (GTR) with instantaneous substitution rate matrix Q:
+\end{itemize}
+% \begin{columns}
+    % \column{0.5\textwidth}
+    \begin{align*}
+    Q_{xy} &=  \begin{cases}
+        0 & \text{if $x$ and $y$ differ by more than one nucleotide change}\\
+        % 0 & \text{if multiple hits from $X$ to $Y$}\\
+        \grande{\pi}_{y_j}\grande{\sigma}_{x_iy_j} & \text{if $x$ and $y$ are synonymous}\\
+        \grande{\omega} \cdot \grande{\pi}_{y_j} \grande{\sigma}_{x_iy_j} & \text{if $x$ and $y$ are nonsynonymous}
+    \end{cases}\\
+    Q_{xx} &= -\sum_{y:y \neq x} Q_{xy}
+    \end{align*}
+    % \vspace{1em}
+    % $\grande{\pi}$: nucleotide stationary frequencies\\
+    % $\grande{\sigma}$: GTR substitution rates\\
+    % $\grande{\omega}$: amino acid coefficient of selection
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Substitution Model} %------------------------------------------
+$P(y|x;\Theta)$: MG94 + GTR probability $x \rightarrow y$ after time $t$, $\Theta = \{t, \omega, \pi, \sigma\}$.
+
+\vspace{2em}
+
+\centering
+\hspace*{-4em}\resizebox{\textwidth}{!}{\input{defense/figures/subst-fst}}
+\note[item]{Default arc weight is 1 \& default input/output symbols are \O.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Indel Model} %----------------------------------------------------
+\centering
+\vspace*{-2em}\hspace*{-2em}\resizebox{!}{\textheight}{\input{defense/figures/fig-evolution-fst}}
+\note[item]{There's more arcs from S to M to support base calling errors, not shown here.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t]{FST Alignment} %-----------------------------------------------
+\begin{itemize}
+    \item Contains all possible alignments: ancestor sequence transducer $\times$ Evolution FST $\times$ descendant sequence transducer (e.g., $s$ = ACT, $v$ = AGT)
+\end{itemize}
+% \vspace{1em}
+\centering
+\vspace*{-1em}\includegraphics[width=\textheight,height=0.65\textwidth,keepaspectratio,angle=-90]{defense/figures/graph-fst.pdf}
+\note[item]{$\oplus$: combination operator; $\otimes$: aggregation operator.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t,noframenumbering]{FST Alignment} %-------------------------------
+\begin{itemize}
+    \item Contains all possible alignments: ancestor sequence transducer $\times$ Evolution FST $\times$ descendant sequence transducer.
+    \item The best alignment is the highest probability path from start to end state, found using the Viterbi algorithm.
+\end{itemize}
+\centering
+\includegraphics[width=\textheight,height=0.8\textwidth,keepaspectratio,angle=-90]{defense/figures/path-fst.pdf}
+\note[item]{FST operations, including this graph, are made using the openFST library.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t,noframenumbering]{FST Alignment} %-------------------------------
+\begin{itemize}
+    \item Contains all possible alignments: ancestor sequence transducer $\times$ Evolution FST $\times$ descendant sequence transducer.
+    \item The best alignment is the highest probability path from start to end state, found using the Viterbi algorithm.
+    \item The ancestor sequence is assumed of high quality to preserve the reading frame and safeguard against frameshifts in the potentially lower-quality descendant sequence.
+    \item openFST library supports multiple semirings, we use tropical.
+    % \item FST operations are done using the tropical semiring and openFST library.
+\end{itemize}
+% \vspace{1em}
+\centering
+\input{defense/figures/semirings}
+\note[item]{Explain table.}
+\note[item]{$\oplus$: combination operator; $\otimes$: aggregation operator.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Methods} %--------------------------------------------------------
+% \TODO{Rethink pipeline figure. Sequence examples??}
+\includegraphics[width=0.95\textwidth]{images/fig-pipeline.png}
+\vspace{1em}
+\begin{columns}[b]
+    \hspace{1cm}
+    \column{0.3\textwidth}
+    \textbf{Aligners:}\\
+    \begin{itemize}
+        \item COATi: Codon model
+        \item MAFFT: DNA model
+        \item PRANK: Codon model
+    \end{itemize}
+    \column{0.7\textwidth}
+    % Metrics:\\
+    \begin{itemize}
+        \item MACSE: Amino acid model + frameshifts
+        \item Clustal $\Omega$: Amino acid model
+        % \item Avg alignment error ($d_{seq}$)
+        % \item Number of perfect alignments
+        % \item Accuracy of selection ($\text{F}_1$ score using $K_a K_s$)
+    \end{itemize}
+\end{columns}
+\note[item]{To test the accuracy of COATi we generated a benchmark of pairwise alignments and tested it against (aligners).}
+\note[item]{To generate the data set, we downloaded all the available human and gorilla homologous sequence pairs from ensembl (~16000).}
+\note[item]{And we aligned all of them using all 5 methods (initial alignments).
+Then we divided them into alignments that had gaps and alns that did not have any gaps.}
+\note[item]{To generate the final data set, we introduced the gap patterns extracted from the first group into the gapless ones.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Metrics} %--------------------------------------------------------
+\begin{itemize}
+    \setlength\itemsep{1em}
+    \item Distance between alignments $d_{seq}$
+        \begin{itemize}
+            \setlength\itemsep{1em}
+            \item Takes into account indels, symmetric, values in range $[0,1]$
+            % \item Symmetric %(d(A,B) = d(B,A))
+            % \item Values in range $[0, 1]$
+        \end{itemize}
+    \item Number of perfect and imperfect alignments
+        \begin{itemize}
+            \setlength\itemsep{1em}
+            \item Perfect: $d_{seq} = 0$ or equivalent alignment
+            \item Imperfect: not perfect when at least one method found perfect
+        \end{itemize}
+    \item Kimura two-parameter evolutionary distance between alignments.
+    \item Accuracy of selection (using $k_a$ and $k_s$)
+        \begin{itemize}
+            \setlength\itemsep{1em}
+            \item $k_a$: \# of substitutions per non-synonymous site
+            \item $k_s$: \# of substitutions per synonymous site
+            \item False discovery rate: 1 - precision = $\frac{FP}{FP+TP}$
+            \item False negative rate: 1 - recall = $\frac{FN}{FN+TP}$
+            % \item F$_1$: harmonic mean of precision and recall $\frac{2 \text{TP}}{2 \text{TP} + \text{FP} + \text{FN}}$
+        \end{itemize}
+\end{itemize}
+\note[item]{To evaluate the performance of each method, we used the avg alignment error or distance metric dseq, the number of perfect and imperfect alignments, evolutionary distance between alns, and accuracy of identifying events of pos and neg selection using $k_a$ and $k_s$ (reported using FDR and FNR).}
+\note[item]{FDR: proportion of false positives. FNR: proportion of missed positives (false negatives).}
+\note[item]{$k_a$: no changes at the amino acid level}
+\note[item]{$k_s$: introduces changes at the amino acid level}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Results} %--------------------------------------------------------
+% \cyan{Plots for results?}
+\centering{\scalebox{0.9}{\input{figures/table-comp.tex}}}
+\vspace{1em}
+% \begin{itemize}
+% 	\item AA-based aligners have difficulties retrieving
+% 		positive selection.
+% 	\item PRANK (no frameshifts) together with CLUSTAL$\Omega$ have the highest
+% 		alignment error.
+% 	\item MAFFT and MACSE (AA-based and frameshifts) have lower
+% 		alignment error but also have difficulties with positive selection.
+% \end{itemize}
+% Pinpoint shortcomings of aligners
+\note[item]{1st row: distance metric, the lower the better.}
+\note[item]{Clustal$\Omega$ has difficulty "recovering/maintaining" positive
+selection given its AA-based alignment.}
+\note[item]{PRANK fails to align sequences with incomplete codons (length not multiple of three).}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Average Distance Between Alignments---$d_{seq}$} %-------------
+\centering
+\includegraphics[width = \textwidth]{defense/images/dseq_plots_mafft_macse_tri-mg.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Average Distance Between Alignments---$d_{seq}$} %-------------
+\centering
+\includegraphics[width = \textwidth]{defense/images/dseq_plots_prank_clustalo_tri-mg.png}
+\end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Results} %--------------------------------------------------------
+% Using gorillas as the ancestor, I aligned the benchmark alignments without an early stop codon in the simulated gorilla sequence (4003/7751).\\
+
+% \vspace*{2em}\scalebox{0.9}{\input{defense/figures/table-comp-goref}}
+% % \vspace{1em}
+% % \TODO{By origin results}\\
+% % \TODO{Reverse pipeline results?}
+% \end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{COATi in action} %------------------------------------------------
+% Comment on the results of the 2nd author manuscript from the lab where COATi was used
+% to analyze indel patterns in CDSs.
+% \end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[b]{Biological Application} %-------------------------------------------
+\centering
+\shadowbox{%
+\adjincludegraphics[height=0.7\textheight,trim={0 {0.45\height} 0 0},clip=true,]{defense/figures/ziqi_diss.pdf}
+}
+\par
+\begin{tikzpicture}[remember picture,overlay]
+\draw node[anchor=south east,text width = 35mm,align=center,font=\footnotesize]
+  at ($(current page.south east)+(-5mm,5mm)$)
+  {\pgfimage[height=30mm]{defense/images/ziqi_zhu.jpg}\\
+  Dr. Ziqi Zhu};
+
+\end{tikzpicture}
+
+%%%
+\note[item]{In collaboration with Dr. Ziqi Zhu; he used COATi \& and helped me improve my models.}
+\note[item]{Second author manuscript in process.}
+\note[item]{Dataset: 90 different clades representing all three domains of life (Zou \& Yang 2019).}
+\note[item]{Most likely alignment using \textbf{COATi}.}
+\note[item]{Estimation of alignment parameters for each species-pair.}
+\note[item]{Summarize alignments to understand indel phases.}
+\end{frame} %---------------------------------------------------------------------
+
+\begin{frame}[c]{Indel Model Parameters} %---------------------------------
+\centering
+\includegraphics[height = 0.8\textheight]{defense/images/gap_90_species_estimates.png}
+\note[item]{Parameters are estimates of the rate of indels per branch length if $\omega$ = 1.}
+\note[item]{The trend is that r0 is larger than r2 which in turn is larger than r1. Because its paired data, <next slide>.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Indel Model Parameters} %---------------------------------
+\centering
+\includegraphics[height = 0.8\textheight]{defense/images/gap_90_species_relative.png}
+\note[item]{We can compare the values directly. X-axis is r1/r0 and y-axis is r2/r0. Because all points are below 1 in both axis, r0 is always larger. The majority of points is above the abline, so in general r2 is larger than r1. Which makes sense for protein-coding regions, since we expect them to be under purifying selection.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Indel Phases Are Similar Across Species} %-----------------------
+\centering
+\includegraphics[height = 0.9\textheight]{defense/images/indel_phases_90_species.png}
+\note[item]{If we take a look at the proportion of phase 0,1,2 gaps, we see that about 50\% of gaps are phase0. Aligners that only consider phase 0 gaps miss the optimal alignment about 50\% of the time.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Runtime} %-----------------------------------------------------
+\centering
+\includegraphics[height = 0.8\textheight]{defense/images/runtime_aligners_triplet.png}
+\end{frame} %-------------------------------------------------------------------
+
+%% AlnPlot: illustrate with an example that current options can't always distinguish between 2 alignments.
+
+\begin{frame}[t]{Marginal Model} %----------------------------------------------
+\begin{itemize}
+    \setlength\itemsep{1em}
+    \item<1-> \textbf{Limitation}: considering the space of all possible alignments consumes time and memory in FST-alignment.
+    \item<2-> \textbf{Goal}: speed up alignment and reduce memory usage.
+    \item<3> \textbf{Solution}
+        \only<3>{\begin{itemize}
+            \setlength\itemsep{1em}
+            \item Adapt the evolution model to use in dynamic programming alignment.
+            \item Marginal substitution model that approximates the triplet model.
+            \item Output nucleotides are only dependent on the input codon and position.
+        \end{itemize}}
+\end{itemize}
+\only<3>{%
+\begin{table}
+    \centering
+    \begin{tabular}{lll}
+          & States& Arcs\\
+         \hline
+         Evolution FST& 924 & 25,000\\
+         Marginal model FST& 5 & 2,220\\
+    \end{tabular}
+\end{table}
+}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Marginal Substitution Model} %------------------------------------
+\begin{itemize}
+    \item Let $X= \{X_0 X_1 X_2\}$ and $Y = \{Y_0 Y_1 Y_2\}$ be non-stop codons
+    % from $\grande{\Sigma}_{codon}$
+    \item Probability that $X \rightarrow Y$ after time $t$ in the triplet model is $P\left(Y_0 Y_1 Y_2 \middle| X_0 X_1 X_2; \Theta \right)$
+\end{itemize}
+
+\begin{equation*}
+P_\text{mar}\left(Y_p = y \middle| X_0 X_1 X_2;\theta \right) =
+\bigoplus_{Y_0 Y_1 Y_2} I(Y_p = y) \otimes P\left(Y_0 Y_1 Y_2 \middle| X_0 X_1 X_2;\Theta \right)
+\end{equation*}
+
+\only<1>{%
+\begin{align*}
+    P_\text{mar}\left(Y_0 = \bm{A} \middle| AGC;\theta\right) =~&P(\bm{A}AA|AGC) \oplus P(\bm{A}AC|AGC) \oplus P(\bm{A}AG|AGC) \oplus \cdots \\
+    &\cdots \oplus P(\bm{A}TG|AGC) \oplus P(\bm{A}TT|AGC)
+\end{align*}
+}
+
+\only<2>{%
+\begin{itemize}
+    \item Two marginal models defined
+    \begin{itemize}
+            \setlength\itemsep{1em}
+        \item Max model from using the tropical semiring
+        \item Sum model from using the linear or the log semiring
+    \end{itemize}
+\end{itemize}
+}
+\note[item]{$\oplus$ aggregation operator; $\otimes$ combination operator.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Marginal Model} %-------------------------------------------------
+\centering
+\resizebox{!}{0.9\textheight}{\input{defense/figures/fig-dp-model}}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Comparison of Marginal Models} %----------------------------------
+\begin{itemize}
+    \item Kullback-Leibler divergence between triplet and de-marginal models.
+    \item Let $X= \{X_0 X_1 X_2\}$ and $Y = \{Y_0 Y_1 Y_2\}$ be non-stop codons
+    % from $\grande{\Sigma}_{codon}$
+    \item Probability that $X \rightarrow Y$ after time $t$ in the triplet model is $P\left(Y_0 Y_1 Y_2 \middle| X_0 X_1 X_2; \Theta \right)$
+    \item Marginal to 61x61: $P_{de\text{-}mar}(Y|X) = P_{mar}(Y_0|X;\theta) \cdot P_{mar}(Y_1|X;\theta) \cdot P_{mar}(Y_2|X;\theta)$
+\end{itemize}
+
+\begin{equation*} \label{eq:KLD}
+    D_{KL} (P | P_{de\text{-}mar}) = \sum_{x \in \chi} P(x) \log \left( \frac{P(x)}{P_{de\text{-}mar}(x)} \right)
+\end{equation*}
+\note[item]{To compare how well the marginal models approximate the triplet model, I used the Kullback-Leibler divergence, which measures how well a probability distribution approximates another.}
+\note[item]{To do so, I had to calculate the codon-to-codon (61x61) substitution probabilities with the marginal model to have to distribution with the same dimensions.}
+\note[item]{To do that, I calculated the probability that a entire codon evolves into another by <formula>.}
+\note[item]{Then, the divergence measure of the triplet give then marginal is <formula> for every event (codon-to-codon substitution).}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c] %--------------------------------------------------------------
+\centering
+\includegraphics[height = 0.9\textheight]{defense/images/kld_mg.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Methods} %--------------------------------------------------------
+    \begin{itemize}
+        \item Compare how well the triplet, marginal-max, and marginal-max perform.
+        \item Pipeline that simulates two descendants given a human CDS.
+        \item Metrics: $d_{seq}$ and number of perfect and imperfect alignments.
+    \end{itemize}
+\centering
+\includegraphics[width=0.8\textwidth]{/images/coati_evo_sim_chart.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c] %--------------------------------------------------------------
+\centering
+\includegraphics[height = 0.9\textheight]{defense/images/results_marginal_triplet_mg.png}
+\note[item]{Transition: Marginal-sum is a good approximation, yet available metrics are not able to find where it differs from the triplet.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{AlnDotPlot} %-----------------------------------------------------
+\begin{itemize}
+    \item A tool to compare pairwise alignments inspired by traditional dot plots.
+    \item Alignment event: matches, mismatches, and indels.
+    \item Visualize sampling results.
+    \item Identify and display subtle differences in long alignments.
+    \item Examine codon similarity in alignment space.
+\end{itemize}
+\note[item]{I developed a tool to compare pairwise alignments inspired by traditional tod plots.}
+\note[item]{AlnDotPlot can display single alignments, compare sampling results to analyze alignment space, find subtle differences in long alignments, and examine codon similarity.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t]{Alignment to Dot Plot} %---------------------------------------
+\begin{columns}
+    \column{0.3\textwidth}
+        \centering
+        \input{defense/figures/aln2matrix/line-alns}
+    \column{0.7\textwidth}
+        \only<1>{\resizebox{!}{0.8\textheight}{\input{defense/figures/aln2matrix/line-counts}}}
+        % \only<2>{\input{chapter4/figures/example-line}}
+        \only<2>{\resizebox{\textwidth}{!}{\input{defense/figures/aln2matrix/line}}}
+\end{columns}
+\note[item]{Rows and columns correspond to symbols in the sequences with empty spaces between them to mark insertions and deletions in the matrix (when appropriate).}
+\note[item]{In this case, where we have 3 possible alignments of the same pair of sequences, we can count the number of each event <explain figure>.}
+\note[item]{If we now represent those counts as frequency and color them, we obtain a graphical representation of the 3 alignments.}
+\note[item]{Dots correspond to events in the alignments, edges join them to make a path. Xs mark matches and color represent their frequency.}
+\note[item]{Explain figure.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Sampling} %----------------------------------------------------
+\centering
+\resizebox{!}{0.9\textheight}{\input{defense/figures/alndotplot/sample}}
+\note[item]{To visualize sampling results, I sampled 100 alignments of these two sequences.}
+\note[item]{<describe figure>.}
+\note[item]{Transition: this is useful to check what sections are most common in sampling, but it's difficult to compare complete paths.}
+\end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Alignment to Dot Plot} %------------------------------------------
+% \begin{columns}
+%     \column{0.6\textwidth}
+%         \begin{itemize}
+%             \setlength\itemsep{1em}
+%             \item Marginal-sum is a good approximation.
+%             \item Metrics cannot find differences.
+%             \item Available tools are limited to one-to-one summary scores or column uncertainty.
+%             \item \textbf{Solution}: AlnDotPlot.
+%         \end{itemize}
+%     \column{0.4\textwidth}
+%     \centering
+%         \hspace*{-1.5em}\resizebox{!}{0.2\textheight}{\input{chapter3/figures/dotplot-alignments}}
+%         \vspace{2em}
+%         % \resizebox{!}{0.4\textheight}{\input{chapter3/figures/fig-dotplot}}
+%         \resizebox{!}{0.5\textheight}{\input{defense/figures/alndotplot/intro1}}
+% \end{columns}
+% \end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Traditional Dot Plot} %-------------------------------------------
+% \begin{columns}
+%     \column{0.4\textwidth}
+%         Only information about matches and mismatches.\\
+%         \vspace{1em}
+%         \resizebox{!}{0.5\textwidth}{\input{figures/alndotplot/fig-alndotplot-alns}}
+%     \column{0.6\textwidth}
+%         \resizebox{\textheight}{!}{\input{figures/alndotplot/example-traditional}}
+% \end{columns}
+% \end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Expanded Dot Plot} %----------------------------------------------
+% \begin{columns}
+%     \column{0.4\textwidth}
+%         Adds path information but can't identify crossing paths.\\
+%         \vspace{1em}
+%         % \resizebox{!}{0.5\textwidth}{\input{figures/alndotplot/fig-alndotplot-alns}}
+%         \resizebox{!}{0.5\textwidth}{\input{chapter4/figures/example-alns}}
+%     \column{0.6\textwidth}
+%         % \resizebox{\textheight}{!}{\input{figures/alndotplot/example-expanded}}
+%         \resizebox{\textheight}{!}{\input{chapter4/figures/example-exp}}
+% \end{columns}
+% \end{frame} %-------------------------------------------------------------------
+
+% \begin{frame}{Line} %-----------------------------------------------------------
+% \begin{columns}
+%     \column{0.4\textwidth}
+%         Lines display more information when paths cross but can't identify full paths.\\
+%         \vspace{1em}
+%         \resizebox{!}{0.5\textwidth}{\input{chapter4/figures/example-alns}}
+%     \column{0.6\textwidth}
+%         \centering
+%         \includegraphics[height = 0.8\textheight]{defense/figures/alndotplot/example-line.pdf}
+%         % \resizebox{\textheight}{!}{\input{chapter4/figures/example-line}}
+% \end{columns}
+% \note[item]{Helps when multiple paths are close together (e.g. intersection). Clarifies how many com from where (more helpful with more alignments).}
+% \end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Multiple Lines} %------------------------------------------------
+\begin{columns}
+    \column{0.4\textwidth}
+        \centering
+        \input{defense/figures/alndotplot/line-alns}
+    \column{0.6\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{\input{defense/figures/alndotplot/mlines}}
+\end{columns}
+\note[item]{This version allows us to compare specific alignments.}
+\note[item]{<describe figure>.}
+\note[item]{Transition: however, <next slide>.}
+\end{frame} %---------------------------------------------------------------------
+
+% \begin{frame}{Multiple Lines} %-------------------------------------------------
+% \begin{columns}
+%     \column{0.4\textwidth}
+%         Multiple lines display different paths.\\
+%         \vspace{1em}
+%         % \resizebox{!}{0.5\textwidth}{\input{figures/alndotplot/fig-alndotplot-alns}}
+%         \resizebox{!}{0.5\textwidth}{\input{chapter4/figures/example-mlines-alns}}
+%     \column{0.6\textwidth}
+%         % \resizebox{!}{0.68\textwidth}{\input{figures/alndotplot/example-mlines}}
+%         % \resizebox{!}{0.68\textwidth}{\input{chapter4/figures/example-mlines}}
+%         \centering
+%         \includegraphics[width = 0.8\textwidth]{defense/figures/alndotplot/example-mlines.pdf}
+% \end{columns}
+% \end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{Multiple Lines} %------------------------------------------------
+\begin{columns}
+    \column{0.3\textwidth}
+        Small differences with long sequences are difficult to identify (180 nucs).
+    \column{0.7\textwidth}
+        \centering
+        % \scalebox{0.02}{\input{chapter4/figures/example-long}}
+        \resizebox{!}{0.9\textheight}{\input{chapter4/figures/example-long}}
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[t]{Bubble detection} %--------------------------------------------
+\begin{columns}
+    \column{0.4\textwidth}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Generate a small plot for every different section between a pairwise alignment.
+        \item Codon substitution similarity:
+        \begin{itemize}
+            \setlength\itemsep{1em}
+            \item Green no DNA changes
+            \item Yellow code for same amino acid
+            \item Orange different amino acid, same group
+            \item Red different amino acid, different group
+        \end{itemize}
+    \end{itemize}
+    \column{0.6\textwidth}
+        \centering
+        \resizebox{\textheight}{!}{\input{defense/figures/alndotplot/0.8-ENSG00000160255.fasta2}}
+\end{columns}
+\note[item]{To solve that, I designed an algorithm that detects when two alignments diverge (and form a bubble). Given two sequence alignments, this algorithm can find and generate a plot for each section where they differ.}
+\note[item]{In addition, I can color the alignment space (matrix) to show codon similarity to potentially give us information of why a model might avoid certain areas.}
+\note[item]{<describe colors; physicochemical properties>.} 
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c]{} %------------------------------------------------------------
+\begin{columns}
+    \column{0.5\textwidth}
+    \centering
+    \scalebox{0.44}{\input{defense/figures/alndotplot/0.8-ENSG00000135622.fasta1}}
+  \column{0.5\textwidth}
+    \centering
+    \scalebox{0.41}{\input{defense/figures/alndotplot/0.6-ENSG00000136108.fasta1}}
+\end{columns}
+\vspace{2em}
+% Triplet prefers substitutions while marginal-sum prefers indels over mismatches.
+% Probably look at the difference in substitution probabilities for those codons.
+\note[item]{Explain that after looking at around top 50 most different alns (dseq), this is the most common pattern.}
+\note[item]{Transition: Now that we have compared the marginal models, let's see how well marginal-sum does in comparison to other aligners using the same pipeline as before.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Results Human Gorilla Pipeline} %---------------------------------
+\centering{\scalebox{0.9}{\input{figures/table-comp-marg}}}
+\vspace{1em}
+% Pinpoint shortcomings of aligners
+\note[item]{1st row: distance metric, the lower the better.}
+\note[item]{Recall pipeline: 16,000 human and gorilla homologous CDS, insert inferred gap patterns.}
+\note[item]{Similar pattern as with coati triplet model.}
+\note[item]{Transition: now, <speed>.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c] %--------------------------------------------------------------
+\centering
+\includegraphics[height=0.95\textheight,center]{defense/images/runtime_aligners.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{COATi Implementation} %-------------------------------------------
+% \cyan{Modify this, probably shorten. Keep brief but highlight the software development work and that there exists a tool available to researchers already.}
+% \begin{columns}
+    % \column{0.6\textwidth}
+    \begin{itemize}
+	\setlength\itemsep{1em}
+        \item Triplet alignment using FST operations from openFST library (C\texttt{++}).
+        \item Marginal alignment adapted version of Gotoh dynamic programming algorithm.
+        \item Optimizations and other procedures.
+        \item Additional functionalities: sample, initial MSA, format, and genseed.
+        \item Project has CI and code coverage on GitHub.
+        \item Over 7,000 lines of C\texttt{++} code.
+    \end{itemize}
+    % \column{0.4\textwidth}
+    % \begin{columns}
+    %     \column{0.6\textwidth}
+    %         \scalebox{0.6}{\input{figures/get-nuc}}
+    % \end{columns}
+% \end{columns}
+\note[item]{openFST is a general purpose FST library written in C++.}
+\note[item]{Unrefined initial MSA (work for future grad students in lab).}
+\note[item]{During the last 2-3 years I've written about 7000 lines of code developing coati.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Conclusion} %-----------------------------------------------------
+\begin{itemize}
+    \setlength\itemsep{1em}
+    \item Sequence alignment is a fundamental problem in bioinformatics that is not fully solved.
+    \item I developed a model and built an aligner for CDS that understands common artifacts in genomic data and outperforms available methods.
+    \item Model and tool development must continue to evolve to handle the volume and characteristics of genomic data in the present age.
+\end{itemize}
+\note[item]{With this project I developed and built an aligner \textbf{that researcher are already using (!)}, that understands common artifacts in genomic data and outperforms available methods.}
+\note[item]{In addition, I want to highlight that usually model and tool development are not in the spotlight in our field, it's important to continue improving them to properly handle the volume and characteristics of the data (and for more accurate results).}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Thank you - Gracias}
+% pictures?
+% in no particular order
+\begin{itemize}
+\begin{columns}
+    \column{0.3\textwidth}    
+        \item Reed Cartwright
+        \item Banu Ozkan
+        \item Jay Taylor
+        \item Ted Pavlic
+        \item Abigail Howell
+        \item Ziqi Zhu
+        \item Courtney Grigsby
+        \item Adam Orr
+    \column{0.3\textwidth} 
+        \item Samantha Ortega-Hufana
+        \item Marise \& José
+        \item Sebastián
+        \item Patrick Park
+        \item Sid Kao
+        \item Sean Kao
+        \item Ortega-Hufana family
+        \item Jonny \& SwimDevils
+    \column{0.3\textwidth}    
+        \item Henry Secaira
+        \item Vanessa 
+        \item Romain Dahan
+        \item Tim Licknack
+        \item Academic advisors
+        \item The Carpentries
+        \item Sergio García
+        \item Volleyball crew
+        % \item Erin and Spencer
+\end{columns}
+\end{itemize}
+\note[item]{Thank everyone here for coming today and to the many people that have helped me through my journey (included but not limited to <list>).}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Questions} %------------------------------------------------------
+% \includegraphics[scale=0.1,center]{images/lab.jpg}
+\includegraphics[center]{images/coati_psf_light.jpg}
+\end{frame} %-------------------------------------------------------------------
+
+% ##############################################################################
+% \appendix % ####################################################################
+% Supplemental slides
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+\centering
+\includegraphics[height = \textheight]{defense/suppl/COATi_ref_distance.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+\begin{columns}
+    \column{0.5\linewidth}
+        \includegraphics[width = \textwidth, trim={2.5cm 0 3cm 0}, clip]{defense/suppl/MAFFT_ref_distance.png}
+    \column{0.5\linewidth}
+        \includegraphics[width = \textwidth, trim={2.5cm 0 3cm 0}, clip]{defense/suppl/PRANK_ref_distance.png}
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+\begin{columns}
+    \column{0.5\textwidth}
+        \includegraphics[width = \textwidth, trim={2.5cm 0 3cm 0}, clip]{defense/suppl/MACSE_ref_distance.png}
+    \column{0.5\textwidth}
+        \includegraphics[width = \textwidth, trim={2.5cm 0 3cm 0}, clip]{defense/suppl/Clustalo_ref_distance.png}
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[c,noframenumbering]{Substitution Model Parameters} %--------------
+\centering
+\includegraphics[height = 0.8\textheight]{defense/images/sigma_estimates_90_species.png}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Results---max} %--------------------------------------------------
+\centering
+\includegraphics[height = 0.9\textheight]{chapter3/figures/heatmaps/tri-max-mg-1.pdf}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Results---sum} %--------------------------------------------------
+\centering
+\includegraphics[height = 0.9\textheight]{chapter3/figures/heatmaps/tri-sum-mg-1.pdf}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-------------------------------------------------
+\begin{columns}
+\column{0.5\textwidth}
+Non-negative function, $d(x,y)$, metric conditions:
+\begin{itemize}
+	\item $d(x,y) = 0$ iff $x=y$
+	\item $d(x,y) = d(y,x)$ symmetry
+	\item $d(x,z) \leq d(x,y) + d(y,z)$ triangle inequality
+\end{itemize}
+\column{0.5\textwidth}
+\includegraphics[scale=0.15,center]{./images/fig-sop-problems.png}
+\end{columns}
+% \footnotetext[1]{\cite{metrics_blackburne_whelan_2011}}
+\note[item]{For a function to be a valid metric has to meet all three criteria
+	(explain briefly). Sum of pairs, a common score used to evaluate differences
+	between MSA based on the number of matches on each column, has been proven
+	to not satisfy all 3 conditions. An example (fig).}
+\end{frame} %---------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-------------------------------------------------
+\begin{align*}
+d(A,B) = \frac{1}{c} \sum_i \sum_j d(A,B)^i_j = \frac{1}{c} \sum_i \sum_j \frac{|H(A)^i_j \triangle H(B)^i_j|}{|H(A)^i_j|+|H(B)^i_j|}
+\end{align*}
+
+\note[item]{Homology set: characters on the same column, i.e. nucleotides said to
+	be homologous.}
+\note[item]{Hamming distance: number of different positions or minimum number of
+	substitutions required to change one set into the other.}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+\centering{\resizebox{0.85\linewidth}{!}{% Resize table to fit within \linewidth horizontally
+\input{defense/figures/table-example-dseq.tex}
+}}
+
+\vspace{1em}
+\begin{columns}
+\column{0.5\textwidth}
+$d_{seq}(A,B)^1_1=0$ \\
+$d_{seq}(A,B)^2_1=0$ \\
+$d_{seq}(A,B)^3_1=0$ \\
+\column{0.5\textwidth}
+$d_{seq}(A,B)^1_2=\frac{2}{4}=\frac{1}{2}$ \\
+$d_{seq}(A,B)^2_2=\frac{1}{4}$ \\
+$d_{seq}(A,B)^3_2=\frac{1}{4}$ \\
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+Codon substitution with instantaneous substitution rate matrix $Q$:
+\vspace{1em}
+\begin{align*} Q_{ij} &= \begin{cases}
+    \mu_{ij} & \text{if $i$ and $j$ are synonymous}\\
+    \omega \cdot \mu_{ij} & \text{if $i$ and $j$ are nonsynonymous}
+    \end{cases}\\[10pt]
+   Q_{ii} &= -\sum_{j:j \neq i} Q_{ij}
+\end{align*}
+\begin{itemize}
+	\item $\mu_{ij}$: mutation rate of codon $i$ to $j$.
+	\item $\omega$: coefficient of selection.
+	\item Supports a variety of models %(e.g.
+		%MG94\parencite{muse_gaut_1994}, ECM\parencite{kosiol_ECM_2007}).
+	% \item $t$: evolutionary time.
+	% \item $P(j | i;t) = {\rm e}^{Qt}$.
+\end{itemize}
+\end{frame} %-------------------------------------------------------------
+
+\begin{frame}{Needleman-Wunsch} %-----------------------------------------------
+\textbf{Dynamic programming} algorithm to find the highest scoring alignment.\\
+Solves a large problem by finding optimal solutions to smaller problems.
+\begin{columns}
+    \column{0.6\textwidth}
+        \begin{algorithmic}[1]
+        \State \textbf{Insert} gap penalties
+        \State \textbf{Fill} matrix
+            \For{$i \gets 1$ to $n$}
+                \For{$j \gets 1$ to $m$}
+                    \State \textbf{Compute} deletions
+                    \State \textcolor{blue}{mch} = NW[i-1, j-1] + \text{score}($s_i$, $v_j$)
+                    \State \textcolor{green}{del} = NW[i-1, j] + $\alpha$
+                    \State \textcolor{red}{ins} = NW[i, j-1] + $\alpha$
+                    \State NW[i, j] = \text{max}(mch, del, ins)
+                \EndFor
+            \EndFor
+        \end{algorithmic}
+    \column{0.4\textwidth}
+        \begin{tikzpicture}
+        % Nodes for the matrix
+        \foreach \i in {0,...,2}
+            \node[anchor=east] at (-0.5,\the\numexpr2-\i\relax) {s$_\i$};
+        \foreach \i in {0,...,2}
+            \node[anchor=north] at (\i,3) {v$_\i$};
+        
+        \node at (-0.75, -1) {$\vdots$};
+        \node at (3, 2.75) {$\cdots$};
+        
+        % Fill in the matrix
+        \foreach \i in {0,1,2}
+            \foreach \j in {0,1,2}
+                \node[draw,minimum width=1cm,minimum height=1cm] at (\i,\j) {};
+        
+        \draw[->,thick,blue] (0,2) -- (0.90,1.1);
+        \draw[->,thick,red] (0,1) -- (0.90,1);
+        \draw[->,thick,green] (1,2) -- (1,1.1);
+        \end{tikzpicture}
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}{Marginal Model Alignment} %---------------------------------------
+\begin{itemize}
+    \item Limitation of Needleman-Wunsch (NW): linear gap penalty ($l \cdot \alpha$).
+    \item Gotoh algorithm: NW with affine gap penalties ($\alpha + (l - 1) \cdot \beta$).
+    \item COATi marginal alignment adapts Gotoh.
+\end{itemize}
+\begin{columns}
+    \column{0.5\textwidth}
+\begin{align*}
+    D_{i,j} &= + \begin{cases}
+        M_{i-1, j} \times \log_{1m}(g)\\
+        D_{i-1, j} \times e\\
+        I_{i-1, j} \times \log_{1m}(e) \otimes g\\
+    \end{cases}\\
+    I_{i,j} &= + \begin{cases}
+        M_{i ,j-1} \times g\\
+        I_{i, j-1} \times e\\
+    \end{cases}\\
+    M_{i,j} &= + \begin{cases}
+        % s = P_{mar}[z_jx_i, z_j; \theta] \\
+        M_{i-1, j-1} \times \log_{1m}(g) \times (1-g) \times s\\
+        D_{i-1, j-1} \times \log_{1m}(e) \times s\\
+        I_{i-1, j-1} \times \log_{1m}(e) \times \log_{1m}(g) \times s\\
+    \end{cases}\\
+\end{align*}
+    \column{0.5\textwidth}
+    \centering
+    \resizebox{\textwidth}{!}{\input{defense/figures/fig-dp-model}}
+\end{columns}
+\end{frame} %-------------------------------------------------------------------
+
+\begin{frame}[noframenumbering] %-----------------------------------------------
+$F_1$ score to test correct inference of selection.
+
+\begin{align*}
+F_1 &= \left( \frac{2}{recall^{-1} + precision^{-1}} \right)\\
+	&= 2 \cdot \frac{precision \cdot recall}{precision + recall}\\
+	&= \frac{2 \cdot TP}{2 \cdot TP+FP+FN}
+\end{align*}
+\begin{itemize}
+    \item FDR = 1 - precision = $\frac{FP}{FP+TP}$
+    \item FNR = 1 - recall = $\frac{FN}{FN+TP}$
+\end{itemize}
+
+\vspace{1em}
+Where precision$=\frac{TP}{TP+FP}$ and recall$=\frac{TP}{TP+FN}$.
+\note[item]{$F_1$: weighted average of precision and recall. More informative score
+	/statistic than accuracy.}
+\note[item]{Precision: ratio of correctly predicted positive observations to total
+	predicted pos obs. Recall: (sensitivity) ratio of correctly predicted pos obs
+	to all obs true positives.}
+\note[item]{sensitivity=TP/(TP+FN); specificity=TN/(TN+FP); precision=TP/(TP+FP);
+	accuracy=(TP+TN)/(TP+FN+TN+FP)}
+\end{frame} %-------------------------------------------------------------------
+
+\end{document}

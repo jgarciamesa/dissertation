@@ -1,0 +1,21 @@
+\definecolor{color1}{HTML}{CC9966}
+\definecolor{color2}{HTML}{99CCFF}
+\definecolor{color3}{HTML}{77DD77}
+
+\begin{tikzpicture}[node distance=5mm,font=\footnotesize]
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells]
+
+\matrix (aln1)[aln] {
+ \textbf{\textcolor{color1}{Aln 1}} & & &\\
+CAT & \verb|---| & AAG &\\
+C\verb|-|G & CGG & ACG &\\
+\\
+ \textbf{\textcolor{color2}{Aln 2}} & & &\\
+CAT & \verb|--|A & A\verb|-|G &\\
+CG\verb|-| & CGG & ACG &\\
+\\
+ \textbf{\textcolor{color3}{Aln 3}} & & &\\
+CAT & \verb|--|A & A\verb|-|G &\\
+CGC & GGA & \verb|-|CG &\\
+};
+\end{tikzpicture}

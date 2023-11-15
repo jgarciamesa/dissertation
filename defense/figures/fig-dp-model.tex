@@ -1,0 +1,72 @@
+
+%\documentclass{article}
+% \documentclass[tikz]{standalone}
+
+% \usepackage{pgf}
+% \usepackage{tikz}
+% \usetikzlibrary{arrows,automata,positioning}
+% %\usepackage[latin1]{inputenc}
+% \usepackage{verbatim}
+% \usepackage{graphicx}
+
+% \usetikzlibrary{shapes,arrows,positioning}
+% \tikzset{
+%   font={\fontsize{9pt}{11}\selectfont}
+% }
+
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorP}{RGB}{152,78,163}   % PURPLE
+\definecolor{colorO}{RGB}{255,127,0}    % ORANGE
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorBn}{RGB}{166,86,40}   % BROWN
+\definecolor{colorPk}{RGB}{247,129,191} % PINK
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+% \begin{document}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=6cm,ultra thick]
+  \tikzstyle{every node}=[font=\large]
+
+  \node[circle,fill=colorG!50,minimum size=1cm]  (S)					  {\textbf{Start}};
+  \node[circle,fill=colorB!50,minimum size=1cm]	 (M) [right=20mm of S]  {\textbf{M}};
+  \node[circle,fill=colorB!50,minimum size=1cm]  (I) [above right of=M] {\textbf{I}};
+  \node[circle,fill=colorR!50,minimum size=1cm]  (E) [below right of=M] {\textbf{End}};
+  \node[circle,fill=colorB!50,minimum size=1cm]  (D) [below right of=I] {\textbf{D}};
+
+  \path (S) edge 			  node {}	(M)
+  		(M) edge [out=265,in=200,looseness=10]  node [midway,font=\large] {x$_\text{i}$:z$_\text{j}$ /$(1-\text{g})^2\cdot $s} (M)
+  			edge [bend left]  node [font=\large] {\O:z$_\text{j}$/g} (I)
+            edge         node [font=\large] {x$_\text{i}$:\O/ $(1-\text{g})\cdot$ g} (D)
+            edge [bend right] node [font=\large] {$(1-\text{g})^2$}	(E)
+        (I) edge [out=120,in=60,looseness=10] node [font=\large] {\O:z$_\text{j}$/ e} (I)
+            edge [bend left]  node [rotate=50, above=1em, font=\large] {x$_\text{i}$:z$_\text{j}$/ $(1-\text{e})\cdot (1-\text{g}) \cdot$ s} (M)
+            edge [bend left] node [font=\large] {x$_\text{i}$:\O/ $(1-\text{e}) \cdot$ g} (D)
+            edge [bend left] node [pos=0.96, rotate=60, right=1.5em, font=\large] {$(1-\text{e}) \cdot (1-\text{g})$} (E)
+        (D) edge [out=30,in=330,looseness=10] node [font=\large] {x$_\text{i}$:\O/ $e$} (D)
+        	edge [bend left]  node [above=0.5em, font=\large] {x$_\text{i}$:z$_\text{j}$/ ($1-$e) $\cdot$ s} (M)
+        	edge [bend left]  node [font=\large] {$1-$e} (E);
+
+  \node[text width=4cm, below left=-8mm and 2cm of E] (parameters) {
+  \begin{tabular}{r@{\,: }l}
+  \multicolumn{2}{l}{\textbf{Parameters}}\\
+    \hline
+  g & gap opening\\
+  e & gap extension\\
+  s & substitution\\
+  \end{tabular}
+  };
+
+  \node[text width=4cm, below right=-8mm and 3cm of E] (parameters) {
+  \begin{tabular}{r@{\,: }l}
+  \multicolumn{2}{l}{\textbf{Sequences}}\\
+    \hline
+  x & input sequence\\
+  z & output sequence\\
+  \O & empty sequence\\
+  \end{tabular}
+  };
+\end{tikzpicture}
+
+% \end{document}

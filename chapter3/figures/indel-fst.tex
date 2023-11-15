@@ -1,0 +1,89 @@
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorP}{RGB}{152,78,163}   % PURPLE
+\definecolor{colorO}{RGB}{255,127,0}    % ORANGE
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorBn}{RGB}{166,86,40}   % BROWN
+\definecolor{colorPk}{RGB}{247,129,191} % PINK
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+\tikzstyle{line}=[draw, -stealth', very thick]
+\tikzstyle{block}=[circle,fill=colorB!50,on grid]
+\tikzstyle{lab}=[]
+\tikzstyle{w}=[lab,midway]
+\tikzstyle{e}=[lab,midway,auto=false,fill=white,font=\scriptsize]
+
+\begin{tikzpicture}[node distance=40mm, auto,
+	dottedline/.style = {ultra thick, loosely dotted,shorten >=1mm, shorten <=1mm}]
+%%% Legend
+
+%%% Indel FST
+\node[block,fill=colorG!50] (start1) {start};
+\node[block,below=25mm of start1] (M1) {M};
+\node[block,below=of M1] (I1) {U};
+\node[block,right=of I1] (U1) {I};
+\node[block,above=of U1] (W1) {W};
+\node[block,above=of W1] (D1) {V};
+\node[block,right=of D1] (V1) {D};
+\node[block,right=of W1] (S1) {S};
+\node[block,fill=colorR!50,right=25mm of S1] (end1) {end};
+
+\draw (D1) +(0mm,-20mm) coordinate (C1);
+\draw (D1) +(50mm,-10mm) coordinate (C2);
+
+\draw[line] (start1) -- (M1);
+\draw[line] (M1) -- node[w] {$g$} (I1);
+\draw[line] (M1) -- node[w] {$1-g$} (W1);
+\draw[line] (U1) to[out=150,in=30]  node[w,above] {$e$} (I1);
+\draw[line] (U1) -- node[w,pos=0.1,right] {$1-e$} (W1);
+\draw[line] (W1) -- node[w] {$g$} (D1);
+\draw[line] (W1) -- node[w] {$1-g$} (S1);
+\draw[line] (S1) -- node[w] {} (end1);
+\draw[line] (V1) to[out=150,in=30] node[w,above] {$e$} (D1);
+% \draw[line] (D1) to[out=60,in=90] node[w] {$1-e$} (end1 |- D1.south) to (end1);
+\draw[line] (V1) -- node[w,swap] {$1-e$} (S1);
+
+
+\draw[line] (I1) to[bend right=35] (U1);
+\draw[line] (I1) to[bend right=30] (U1);
+\draw[line] (I1) to[bend right=40] (U1);
+\draw[line] (I1) to[bend right=25] node[e] {\O:Z/$\grande{\pi}_{\text{Z}}$} (U1);
+% \draw[line] (I1) to[out=270, in=270] node[w,above=1mm] {$(1-e)(1-g)$} (end1 |- I1.south) to (end1);
+
+\draw[line] (D1) to[bend right=25] (V1);
+\draw[line] (D1) to[bend right=35] (V1);
+\draw[line] (D1) to[bend right=30] (V1);
+\draw[line] (D1) to[bend right=40] (V1);
+\draw[line] (D1) to[bend right=20] node[e] {Y:\O} (V1);
+
+\draw[line] (S1) to[bend left=42] (M1);
+\draw[line] (S1) to[bend left=48] (M1);
+\draw[line] (S1) to[bend left=45] (M1);
+\draw[line] (S1) to[bend left=51] (M1);
+
+\draw[line] (S1) to[bend left=39] node[e,pos=0.25] {Y:Z} (M1);
+
+\node[font=\footnotesize,text width=50mm,below=7cm of start1] (sequences) {
+\begin{tabular}{r@{\,: }l}
+\multicolumn{2}{l}{\textbf{Sequences}}\\
+    \hline
+	% X & input nucleotides\\
+	Y & intermediate nucleotides\\
+	Z & output nucleotides\\
+	\O & nothing/empty sequence\\
+\end{tabular}
+};
+
+\node[font=\footnotesize,right=0.5cm of sequences,text width=50mm] {
+\begin{tabular}{r@{\,: }l}
+\multicolumn{2}{l}{\textbf{Parameters}}\\
+\hline
+	$g$ & gap open weight\\
+	$e$ & gap extension weight\\
+   	$\pi$ & nucleotide stationary frequency\\
+\end{tabular}
+};
+
+
+\end{tikzpicture}

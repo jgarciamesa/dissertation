@@ -1,0 +1,41 @@
+% \begin{table}[h!]
+% \begin{adjustbox}{width=\columnwidth,center}
+\definecolor{bestcolor}{RGB}{230,230,230}
+
+\begingroup\centering
+\begin{tabular}{r|ccccc}
+      & \textbf{COATi} & \textbf{MAFFT} & \textbf{PRANK\textsuperscript{*}} & \textbf{MACSE} & \textbf{Clustal$\Omega$}\\
+\hline
+Method    & Trip-MG & DNA & Codon & DNA+AA & AA\\[2pt]
+%\hline
+Avg alignment error ($d_{seq}$) & \cellcolor{bestcolor}0.00221 & 0.01471 & 0.01828 & 0.01399 & 0.02929\\
+Perfect alignments & \cellcolor{bestcolor}5139 & 4692 & 4774 & 3737 & 2615\\
+Imperfect alignments & \cellcolor{bestcolor}1048 & 1549 & 2116 & 3980 & 3948\\
+% \hline
+% F1 score for positive selection & \cellcolor{bestcolor}98.1\pct & 84.3\pct & 86.7\pct & 79.5\pct & 68.7\pct \\
+% F1 score for negative selection & \cellcolor{bestcolor}99.8\pct & 98.4\pct & 98.7\pct & 98.2\pct & 96.9\pct \\
+K2P distance RMSE & \cellcolor{bestcolor}0.0005 & 0.035 & 0.037 & 0.032 & 0.052 \\
+Overestimated K2P distance & \cellcolor{bestcolor}10.9\pct & 26.6\pct & 33.8\pct & 48.7\pct & 61.8\pct \\
+FDR positive selection & \cellcolor{bestcolor}2.6\pct & 17.6\pct & 12.8\pct & 10.3\pct & 30.8\pct \\
+FNR positive selection & \cellcolor{bestcolor}1.3\pct & 13.6\pct & 13.7\pct & 28.7\pct & 31.9\pct \\
+FDR negative selection & \cellcolor{bestcolor}0.1\pct & 1.4\pct & 1.4\pct & 2.8\pct & 3.1\pct \\
+FNR negative selection & \cellcolor{bestcolor}0.3\pct & 1.8\pct & 1.3\pct & 0.8\pct & 3\pct \\
+% FDR positive selection & \cellcolor{bestcolor}0.026 & 0.176 & 0.128 & 0.103 & 0.308 \\
+% FNR positive selection & \cellcolor{bestcolor}0.013 & 0.136 & 0.137 & 0.287 & 0.319 \\
+% FDR negative selection & \cellcolor{bestcolor}0.001 & 0.014 & 0.014 & 0.028 & 0.031 \\
+% FNR negative selection & \cellcolor{bestcolor}0.003 & 0.018 & 0.013 & 0.008 & 0.030 \\
+%
+%          FDR.pos FNR.pos FDR.neg FNR.neg
+% tri-mg     0.026   0.013   0.001   0.003
+% mafft      0.176   0.136   0.014   0.018
+% prank      0.128   0.137   0.014   0.013
+% macse      0.103   0.287   0.028   0.008
+% clustalo   0.308   0.319   0.031   0.030
+%
+\hline
+\multicolumn{6}{c}{\rule{0pt}{1em}\textit{*} PRANK produced 42 empty alignments.}
+\end{tabular}
+\par\endgroup
+% \end{adjustbox}
+% \end{table}
+% Best alignments & \cellcolor{bestcolor}5152 & 4833 & 4748 & 3754 & 2595\\

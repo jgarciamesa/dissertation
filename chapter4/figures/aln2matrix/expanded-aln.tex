@@ -1,0 +1,29 @@
+\begin{tikzpicture}[node distance=5mm,font=\footnotesize]
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells]
+
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+\newcommand{\N}[1]{\textbf{#1}}
+
+\matrix (aln1) [aln] {
+Aln1 & & & &\\
+\N{s}: & \N{C}A\N{T} & \verb|---| & \N{AAG} &\\
+\N{v}: & \N{C}\verb|-|\bf{G} & CGG & \N{ACG} &\\
+% };
+% \matrix (aln2) [aln, right=4mm of aln1] {
+\\
+Aln2 & & & &\\
+\N{s}: & \N{CA}T & \verb|--|\N{A} & \N{A}-\N{G} &\\
+\N{v}: & \N{CG}\verb|-| & CG\N{G} & \N{A}C\N{G} &\\
+% };
+% \matrix (aln3) [aln, right=4mm of aln2] {
+\\
+Aln3 & & & &\\
+\N{s}: & \N{CAT} & \verb|--|\N{A} & A-\N{G} &\\
+\N{v}: & \N{CGC} & GG\N{A} & \verb|-|C\N{G} &\\
+};
+\end{tikzpicture}

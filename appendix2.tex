@@ -1,0 +1,51 @@
+\chapter{SUPPLEMENTARY INFORMATION FOR CHAPTER 3} \label{ch:ch3-supplement}
+
+\clearpage
+
+\section*{Alignment Accuracy of the Triplet and Marginal ECM Models}
+
+\begin{table}[!ht]
+\centering
+
+% matrix
+\begingroup\centering
+\begin{tabular}{r|ccccc}
+      \textbf{t} & \textbf{Model} & \textbf{$d_{seq}$} & \textbf{Perfect alns} & \textbf{Imperfect alns}\\
+\hline
+\hline
+0.2 & tri-ecm & 4.075938e-04 & 11609 & 538\\
+0.2 & mar-ecm-sum & 2.254086e-03 & 9568 & 2578\\
+0.2 & mar-ecm-max & 1.153611e-02 & 3955 & 7941\\
+\hline
+0.4 & tri-ecm & 5.674235e-04 & 11146 & 439\\
+0.4 & mar-ecm-sum & 2.782803e-03 & 9271 & 2333\\
+0.4 & mar-ecm-max & 0.0330844 & 1751 & 9599\\
+\hline
+0.6 & tri-ecm & 7.325429e-04 & 10681 & 377\\
+0.6 & mar-ecm-sum & 3.134104e-03 & 9007 & 2020\\
+0.6 & mar-ecm-max & 7.975872e-02 & 669 & 10130\\
+\hline
+0.8 & tri-ecm & 9.450685e-04 & 10354 & 388\\
+0.8 & mar-ecm-sum & 3.621644e-03 & 8862 & 1854\\
+0.8 & mar-ecm-max & 1.771613e-01 & 197 & 10322\\
+\hline
+1.0 & tri-ecm & 1.202495e-03 & 9999 & 361\\
+1.0 & mar-ecm-sum & 4.194538e-03 & 8646 & 1720\\
+1.0 & mar-ecm-max & 3.459159e-01 & 55 & 10155\\
+\end{tabular}
+\par\endgroup
+% end matrix
+ \caption[Alignment Accuracy of the Triplet and Marginal ECM Models]{Table with complete results comparing results of triplet-ecm, marginal-ecm-max, and marginal-ecm-sum COATi models in aligning 13,758 simulated sequence pairs. The triplet-ecm model generates better alignments across all branch lengths. Best alignments have the lowest $d_{seq}$, perfect alignments have the same score as the true alignment or a zero $d_{seq}$, and imperfect alignments have a different score than true alignments when at least one model found a perfect alignment.}
+ \label{table:results-ecm}
+\end{table}
+
+\section*{Benchmark Across Different CPUs}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width = \textwidth]{chapter3/figures/results/benchmarks.pdf}
+    \caption[Runtime Comparison of Triplet and Marginal COATi Models]{Runtime benchmark of COATi marginal and triplet on different CPUs. Runtime is measured in seconds, while the benchmark consists of different length alignments.}
+    \label{fig:cpu-runtime}
+\end{figure}
+
+% \section{coati-format}
+% \section{coati-msa}

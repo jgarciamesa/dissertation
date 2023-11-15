@@ -1,0 +1,17 @@
+\definecolor{bestcolor}{RGB}{230,230,230}
+
+\begingroup\centering
+\begin{tabular}{r|cccccc}
+      & \textbf{COATi} & \textbf{MAFFT} & \textbf{PRANK} & \textbf{MACSE} & \textbf{Clustal$\Omega$} & \textbf{COATi-rev}\\
+\hline
+Method    & Marg-MG & DNA & Codon & DNA+AA & AA & Marg-MG\\[2pt]
+%\hline
+Avg alignment error ($d_{seq}$) & \cellcolor{bestcolor}0.00113 & 0.00586 & 0.00358 & 0.00448 & 0.02099 & 0.00118\\
+Perfect alignments & \cellcolor{bestcolor}3501 & 3162 & 2829 & 2552 & 1772 & 3463\\
+Imperfect alignments & \cellcolor{bestcolor}309 & 648 & 981 & 1258 & 2038 & 347\\
+% \hline
+F1 score for positive selection & \cellcolor{bestcolor}99.3\pct & 91.1\pct & 90.3\pct & 87.2\pct & 76.0\pct & 99.0\pct \\
+F1 score for negative selection & \cellcolor{bestcolor}99.9\pct & 99.1\pct & 99.1 & 98.9\pct & 97.7\pct & 99.9\pct \\
+\end{tabular}
+\par\endgroup
+

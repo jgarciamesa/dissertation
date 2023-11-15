@@ -1,0 +1,19 @@
+\begin{tikzpicture}[node distance=5mm,font=\footnotesize]
+\tikzstyle{aln}=[matrix of nodes, nodes in empty cells]
+
+\definecolor{colorY}{RGB}{255,255,51}   % YELLOW
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorGy}{RGB}{153,153,153} % GRAY
+
+\newcommand{\B}[1]{\textcolor{colorB}{\textbf{#1}}}
+\newcommand{\R}[1]{\textcolor{colorR}{\textbf{#1}}}
+\newcommand{\G}[1]{\textcolor{colorG}{\textbf{#1}}}
+
+\matrix (aln1)[aln] {
+ % \textbf{Aln 1} & & & &\\
+\textbf{s}: & \B{C}A\R{T} & \verb|---| & \G{AAG} &\\
+\textbf{v}: & \B{C}\verb|-|\R{G} & CGG & \G{ACG} &\\
+};
+\end{tikzpicture}

@@ -1,0 +1,155 @@
+\documentclass[12pt,letterpaper]{report}
+\usepackage{natbib}
+\usepackage{geometry}
+%\usepackage{fancyheadings} fancyheadings is obsolete: replaced by fancyhdr. JL
+\usepackage{fancyhdr}
+\usepackage{afterpage}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsbsy}
+\usepackage{dcolumn,array}
+\usepackage{tocloft}
+\usepackage{asudis}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{colortbl}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{setspace}
+\usepackage{multicol}
+\usepackage[hidelinks]{hyperref}
+% tikz packages
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,positioning,shapes,decorations.text,backgrounds,matrix}
+\usepackage{verbatim}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{outlines}
+\usepackage{relsize}
+\usepackage{bm}
+
+\graphicspath{{chapter1/figures/}{chapter2/figures}{chapter3/figures}{chapter4/figures}}
+
+%-------------------------
+%----------------------------
+\fancypagestyle{styletoc}{
+  \fancyhf{}
+  \fancyhead[RE,LO]{CHAPTER}
+  \fancyhead[LE,RO]{Page}
+  \fancyfoot[C]{\thepage}
+% \renewcommand{\headrulewidth}{0pt}
+}
+
+\fancypagestyle{stylefig}{
+  \fancyhf{}
+  \fancyhead[RE,LO]{Figure}
+  \fancyhead[LE,RO]{Page}
+  \fancyfoot[C]{\thepage}
+% \renewcommand{\headrulewidth}{0pt}
+}
+
+\fancypagestyle{regularstyle}
+{
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand\headrulewidth{0pt}
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{}
+}
+
+\begin{document}
+%-----------------------new functions
+\newcommand{\TODO}[1]{\begingroup\bfseries\color{red}TODO:~#1\endgroup}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\grande}[1]{\mathlarger{\mathlarger{#1}}}
+%-----------------------front matter
+\pagenumbering{roman}
+\title{Statistical Sequence Alignment of Protein Coding Regions}
+\author{Juan José García Mesa}
+\degreeName{Doctor of Philosophy}
+% \paperType{Dissertation}
+\defensemonth{October}
+\gradmonth{December}
+\gradyear{2023}
+\chair{Reed A. Cartwright, Chair \\ Jesse Taylor \\ Theodore Pavlic \\ Banu Ozkan}
+\memberOne{Jesse Taylor}
+\memberTwo{Theodore Pavlic}
+\memberThree{Banu Ozkan}
+\memberFour{}
+
+\maketitle
+\doublespace
+\include{abstract}
+\dedicationpage{\vfill Para Marise, José, Sebastián, y Samantha por su amor incondicional, por enseñarme a no rendirme nunca, y por siempre creer en mí.
+
+Porque en esta vida todo pasa por algo.\vfill
+% To Marise, José, Sebastián, and Samantha for their unconditional love, for teaching me to be resilient, and for always believing in me.
+% \vspace{2em}
+}
+\include{ack}
+
+\pagestyle{styletoc}
+\tableofcontents
+\addtocontents{toc}{~\hfill Page\par}
+
+\pagestyle{regularstyle}
+
+
+\newpage 
+
+
+\addcontentsline{toc}{part}{\normalsize LIST OF TABLES}
+\listoftables
+\addtocontents{lot}{Table~\hfill Page \par}
+\newpage
+\addcontentsline{toc}{part}{\normalsize LIST OF FIGURES}
+\addtocontents{toc}{CHAPTER \par}
+
+
+\pagestyle{stylefig}
+\listoffigures
+\addtocontents{lof}{Figure~\hfill Page\par}
+
+
+%\pagestyle{regularstyle}
+%\makeatletter
+%\addtocontents{lof}{\protect\afterpage{\protect\hbox to \linewidth%
+%                    {Figure~\hfill Page}\par%
+%                    \protect\addvspace{10\p@}}}
+%\makeatother
+\newpage
+
+
+%\graphicspath{{cha1/}{cha2/}{cha3/}{cha4/}{cha4/Figures/}}
+
+\pagestyle{regularstyle}
+%-----------------------body
+\doublespace
+\pagenumbering{arabic}
+\include{chapter1/chapter1}
+\include{chapter2/chapter2}
+\include{chapter3/chapter3}
+\include{chapter4/chapter4}
+\include{chapter5/chapter5}
+%-----------------------back matter
+\newpage
+% Making the references a "part" rather than a chapter gets it indented at
+% level -1 according to the chart: top of page 4 of the document at
+% ftp://tug.ctan.org/pub/tex-archive/macros/latex/contrib/tocloft/tocloft.pdf
+{\singlespace
+% Making the references a "part" rather than a chapter gets it indented at
+% level -1 according to the chart: top of page 4 of the document at
+% ftp://tug.ctan.org/pub/tex-archive/macros/latex/contrib/tocloft/tocloft.pdf
+\addcontentsline{toc}{part}{BIBLIOGRAPHY}
+\bibliographystyle{asudis}
+\bibliography{dis}}
+
+\renewcommand{\chaptername}{APPENDIX}
+\addtocontents{toc}{APPENDIX \par}
+\appendix
+\include{appendix1}
+\include{appendix2}
+% \include{vita}
+\end{document}

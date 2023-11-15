@@ -1,0 +1,43 @@
+\begin{algorithm}[hp]
+% forward_impl from coati with gap unit length = 1
+\setstretch{1.1}
+\begin{algorithmic}[1]
+\Function{alignpair}{$s$, $v$, $g$, $e$}
+  \State $n, m \gets |s|, |v|$
+  \State $\text{M, D, I} \gets \operatorname{zero}(n+1, m+1)$ \Comment{Initialize the matrices of size $n+1$ by $m+1$}
+  \For{$i \gets 1$ to $n$} \Comment{Gap deletion penalties}
+    \State $\text{D}[i, 0] \gets g \oplus ((i - 1) \otimes e)$
+  \EndFor
+  \For{$j \gets 1$ to $m$} \Comment{Gap insertion penalties}
+    \State $\text{I}[0, j] \gets g \oplus ((j - 1) \otimes e)$
+  \EndFor
+  \State $M[0,0] \gets \overline{1}$ \Comment{Set starting value in match matrix}
+
+  \For{$i \gets 1$ to $n$} \Comment{Fill in the matrices}
+    \For{$j \gets 1$ to $m$}
+      % \State \textbf{Compute} match
+      \State $\text{mch2mch} \gets M[i-1, j-1] \otimes \log_{1m} (g) \otimes \log_{1m} (g) \otimes \text{P}_{apx}[s_i, v_j]$
+      \State $\text{del2mch} \gets D[i-1, j-1] \otimes \log_{1m} (e) \otimes \text{P}_{apx}[s_i, v_j]$
+      \State $\text{ins2mch} \gets I[i-1, j-1] \otimes \log_{1m} (e) \otimes \log_{1m} (g) \otimes \text{P}_{apx}[s_i, v_j]$
+
+      % \State \textbf{Compute} deletion
+      \State $\text{mch2del} \gets M[i-1, j] \otimes \log_{1m} (g) \otimes g$
+      \State $\text{del2del} \gets D[i-1, j] \otimes e$
+      \State $\text{ins2del} \gets I[i-1, j] \otimes \log_{1m} (e) \otimes g$
+      
+      % \State \textbf{Compute} insertion
+      \State $\text{mch2ins} \gets M[i, j-1] \otimes g$
+      \State $\text{ins2ins} \gets I[i, j-1] \otimes e$
+        
+      \State $M[i, j] = \text{mch2mch} \oplus \text{del2mch} \oplus \text{ins2mch}$ \Comment{Save match scores}
+      \State $D[i, j] = \text{mch2del} \oplus \text{del2del} \oplus \text{ins2del}$ \Comment{Save deletion scores}
+      \State $I[i, j] = \text{mch2ins} \oplus \text{ins2ins}$ \Comment{Save insertion scores}
+
+    \EndFor
+  \EndFor
+\State \textbf{Add end weights}
+\State \textbf{Traceback}
+\EndFunction
+\end{algorithmic}
+\caption[Marginal and Modal Alignment Pseudocode]{Marginal pairwise alignment algorithm. Intentionally different from the Gotoh algorithm to implement the marginal evolutionary model in COATi.}\label{alg:alignpair}
+\end{algorithm}

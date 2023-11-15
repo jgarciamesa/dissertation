@@ -1,0 +1,60 @@
+\chapter{Simulation Algorithm} \label{ch:sim}
+
+% The pitch is to be able to simulate alignments using patterns from the models in specific aligners
+
+% Describe the alignment simulation algorithm used in the pipeline of `coati alignpair`.
+
+\section{Introduction}
+	% nature of the problem
+	% current knowledge and limitations
+	% aims and study relevance
+ 
+% The advancements of science rely substantially on the development of new tools that implement innovative methods and allow for new awesome results.
+
+% These tools need to be tested for accuracy
+
+% Overall, we have come to the troubling conclusion that alignment methods are essential to biological discovery, but evaluating alignment methods is itself challenging, due to the difficulties in relying on either simulation (as currently performed) or current biological benchmarks (due to identified flaws). [conclusion in the last chapter of "Multiple Sequence Alignment: methods and protocols", Kazutaka Katoh]
+
+Advances in science are often bolstered by the development of new tools that implement innovative methods and more detailed models. The design and implementation of tools can sometimes not share the glamour of hypothesis-driven research despite being a crucial component in such discoveries. Developing and improving tools can be an arduous process that requires many steps, including testing for accuracy. With large amounts of data being constantly generated, current tools not only need to be tested for accuracy but also must be able to handle vast magnitudes of information in a timely manner.
+
+Sequence alignment is a task in bioinformatics that has greatly benefited from the advances in tool development. The testing of novel aligners usually involves finding or creating an appropriate data set of curated alignments and measuring the accuracy of the results compared to a benchmark. These data sets are moderately abundant for amino acid alignments but are very scarce for DNA alignments. As an alternative, a common option is to use molecular evolution generators (e.g. \cyan{example}) where the user can specify a variety of models. There exists an array of such programs with an alright amount of substitution models and even a good enough selection of indel models.
+
+However, often aligners have custom models implemented that do not entirely match the canonical models available on generators/simulators. To my knowledge, there are no options to generate sequence alignment using a model extracted from other aligners. Here I describe an algorithm that can simulate pairwise alignments using the patterns from the models embedded in any aligner.
+
+\section{Algorithm}
+
+The simulation algorithm can introduce a pairwise alignment pattern to any two nucleotide sequences of equal length. The alignment pattern is given as a CIGAR string (Compact Idiosyncratic Gapped Alignment Report), a format commonly used to summarize aligned reads to a reference genome. Assigning one of the sequences as the reference, to distinguish between insertions and deletions, CIGAR strings can also summarize pairwise alignments by grouping the number of contiguous matches or mismatches `M', deletions `D', and insertions `I' \cyan{(figure?)}. The resulting pattern combines these letters preceded by the number of characters for each section as they appear in the alignment. The gapless pair of sequences must be given as a FASTA formatted file and are read using the seqinr \citep{seqinr} package.
+
+After reading the sequences, if a \cyan{list/vector} of CIGAR strings is given, I use the name of the output argument to set a seed to ensure reproducibility. 
+
+Several safety checks are in place to ensure the algorithm runs correctly and the result is accurate. The assertions are divided mainly divided into checking lengths and maintaining the phases of each section. \TODO{Mention earlier this is/can be for coding sequences?} The simulation can fail if the length of the sequences is different or if, without counting insertions, it is shorter than the pattern to be inserted. In addition, maintaining the phases of each section in the CIGAR string is important to avoid introducing errors such as frameshifts. 
+
+Implemented as an R script, it can easily be incorporated into any pipeline within R by sourcing the file or by calling from the command line together with the `Rscript` command.
+
+The script can set a seed to replicate results - pairwise alignment. The input is a set of two DNA sequences (no gaps), an alignment pattern, and a desired name for the output pairwise alignment. The alignment pattern must be in CIGAR format (citation?) where we have three letters 'M' for a match, 'I' for an insertion, and 'D' for a deletion. A CIGAR string combines these letters with a number preceding each one that quantifies the number of matches, insertions, or deletions (explain better!). The CIGAR pattern is randomly selected from a set of lists, each extracted from a different aligner.
+
+
+\begin{algorithm}
+    \begin{algorithmic}[1]
+            \Procedure{MyProcedure}{}
+            \State $\textit{stringlen} \gets \text{length of }\textit{string}$
+            \State $i \gets \textit{patlen}$
+            \If {$i > \textit{stringlen}$} \Return false
+            \EndIf
+            \State $j \gets \textit{patlen}$
+            \If {$\textit{string}(i) = \textit{path}(j)$}
+            \State $j \gets j-1$.
+            \State $i \gets i-1$.
+            \State \textbf{goto} \emph{loop}.
+            \State \textbf{close};
+            \EndIf
+            \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+            \State \textbf{goto} \emph{top}.
+            \EndProcedure
+    \end{algorithmic}
+    \caption[Pseudocode for Simulation Algorithm]{this is a caption describing the algorithm}\label{alg:sim}
+\end{algorithm}
+
+test
+
+\TODO{figure showcasing how a pattern is introduced into a gapless pair of sequences?}

@@ -1,0 +1,297 @@
+\chapter{ALNDOTPLOT: VISUAL REPRESENTATION AND ANALYSIS OF PAIRWISE ALIGNMENTS}  \label{ch:alndotplot}
+
+\section{Introduction}
+% Nature of the problem
+% * sequence alignment is hard
+% * There's been improvement because it's an important problem
+% * yet comparison between sequence alignments has not seen any major developments - describe current tools
+The analysis of biological sequences is the inference of unique and unobservable evolutionary events at the DNA level \citep{morrison_MSA_2018}. Alignment inference is an essential step required to address questions across multiple branches of biology, including molecular biology, microbiology, and ecology. The field has seen substantial progress since modern sequence alignment began with the computer-adaptable algorithm of Needleman and Wunsch \citeyearpar{Needleman1970}, replacing the arduous manual arrangement of residues as the default method for sequence alignment.
+
+% Current knowledge and limitations
+% * tools and methods to evaluate sequence alignment are almost as important as the alignment algorithms themselves
+% * current options to evaluate the accuracy of alignments are these, with these limitations
+% * probably a couple of paragraphs grouping tools by type
+
+The development of sequence alignment methods has experienced a continuous effort to improve both their accuracy and speed. The quality of sequence alignments directly impacts the reliability of downstream analyses, and thus, alignment evaluation plays a pivotal role in quality control. Existing evaluation methods can be divided into metrics and scores that summarize similarities between alignments and tools that quantify the uncertainty associated with each column of an alignment. A limitation of these methods is that they can compare a summary metric between two alignments or provide site information about an alignment, but cannot combine both approaches. While aligners typically report a single best result using an evolutionary or scoring model, equally optimal (equivalent) alignments often exist and are rarely reported. However, equivalent alignments and suboptimal alternatives are common in sampling and multiple sequence refinement. Being able to perform a thorough comparison between such alignments can be very valuable for understanding how the underlying biological models work. This can also lead to more detailed comparisons of different methods in validating sequence aligners, improve the algorithms that search for suboptimal alignments in multiple sequence refinement, and better assess sampling results.
+
+\subsection{Alignment Accuracy}
+
+% explain B - metrics that summarize alignment similarities - SOP, TC, d_{seq}
+Popular alignment similarity scores include sum-of-pairs (SP) and total column score (TC). SP is the percentage of correctly aligned residue pairs in an alignment, which measures how well pairs of sequences are aligned, while TC is the percentage of correctly aligned columns in an alignment, testing the ability to align all sequences correctly \citep{thompson2005balibase}. In the case of pairwise alignment, both metrics are identical. A more informative set of metrics that consider indels and the evolutionary history of events in a phylogenetic tree was put forth by Blackburne and Whelan \citeyearpar{metrics_blackburne_whelan_2011}. These metrics range from zero to one and can be interpreted as the probability that a randomly selected residue will be aligned to a different location against a sequence that does not contain such residue. Notably, similarity and distance metrics are easily scalable to compare results over large datasets. However, they struggle to find specific portions where alignments diverge and what are their differences.
+
+% explain A - tools that quantify position uncertainty - GUIDANCE, T-COFFEE, MUMSA
+Tools and methods that quantify alignment uncertainty include Heat or Tails \citep{landan2007heads}, a method that considers the probability distribution of possible placements for each sequence within a multiple sequence alignment; GUIDANCE \citep{penn2010guidance}, which uses bootstrap algorithms; GUIDANCE 2 \citep{sela2015guidance2}, which combines three sources of uncertainty: co-optimal solutions, guide tree instability, and opening gap penalty; ZORRO \citep{wu2012zorro}, based on hidden Markov models; and MUMSA \citep{lassmann2005mumsa}, which calculates the portion of identically aligned regions; and posterior decoding, a popular method used in the context of Markov models that calculates the probability of each state in the alignment path and is particularly useful when many different paths have almost the same probability as the most likely one. These methods provide information about the reliability of each column in an alignment and identify uncertain sections, allowing researchers to remove them to prevent errors that may bias downstream analysis. While these metrics can help improve the quality of genomic pipeline results, they are also limited to analyzing one alignment at a time.
+
+\subsection{Alignment Visualization}
+
+A common feature shared among the alignment uncertainty applications described above is their display of confidence scores and the alignment in matrix form (Fig.~\ref{fig:msa-example}). This format of alignment visualization provides a representation of an alignment, where residues are typically colored by type and are supported by numerous software packages and web-based tools (e.g., \citealp{zhou2022ggmsa}; \citealp{yachdav2016msaviewer}). A matrix representation of an alignment displays two or more aligned sequences as rows, with each column representing a site. However, while this format is intuitive, it does not allow comparing two or more alignments.
+
+\begin{figure}[!ht]
+    \centering
+    % \resizebox{0.9\textwidth}{!}{
+    \input{chapter4/figures/msa-example}
+    \caption[Multiple Sequence Alignment Plot]{Example of a DNA multiple sequence alignment visualization in matrix form. Every row corresponds to a sequence and every column is a position in the alignment. Nucleotides are colored by type and gaps are shown in black.}
+    \label{fig:msa-example}
+\end{figure}
+
+% An additional and perhaps less used visualization method is dot plots.
+% Describe dot plots, including what they are and represent, their use cases, and their limitations.
+Dot plots are an additional visual representation tool used to compare two sequences that facilitate the identification of similarities, differences, and underlying patterns, introduced by Gibbs and McIntyre \citeyearpar{gibbs1970dotplot}. They consist of a matrix where one sequence is displayed on the x-axis, left to right, and the other on the y-axis, top to bottom, and using dots indicate matching residues between the sequences. Conversely, mismatching nucleotides are left blank. Note that gap symbols are typically not considered in dot plots as they evaluate unaligned sequences.
+
+In biological sequence analysis, dot plots are suitable for identifying regions of similarity between sequences, evidenced by diagonal lines of dots that run left to right and top to bottom. The length and pattern of these contiguous dots provide insight into the nature and extent of the similarity. In addition, dot plots are used to identify specific biological events, including repeated regions, tandem repeats, palindromic regions, and microsatellite patterns (Fig. \ref{fig:dotplot-patterns}). This illustrates that dot plots are a simple and versatile tool for comparing pairs of unaligned sequences.
+
+\begin{figure}[!ht]
+    \centering
+    \scalebox{1}{\input{chapter4/figures/dotplot-patterns}}
+    % \includegraphics[width = \textwidth]{chapter4/figures/dotplot-patterns.png}
+    \caption[Overview of patterns found in dot plots]{. Overview of characteristic patterns in dot plots.
+    \textbf{a)} A continuous main diagonal shows perfect similarity.
+    \textbf{b)} Parallels to the main diagonal indicate repeated regions on different parts of the sequences.
+    \textbf{c)} When the diagonal is a discontinuous line this indicates that the sequences T$_1$ and T$_2$ share a common ancestor.
+    \textbf{d)} Partial deletion in sequence T1 or insertion in sequence T2. Work modified from \citealp{schulz2008code10}}
+    \label{fig:dotplot-patterns}
+\end{figure}
+
+\subsection{Comparison of Pairwise Alignments}
+% Then aims and study relevance - I developed AlnDotPlot to address (some of) these limitations.
+% General description and impact.
+% Sampling, compare alternative and suboptimal alignments, algo más?
+
+The tools described above provide valuable and scalable algorithms for measuring distance or scoring similarity between alignments and methods for identifying uncertain regions within alignments. However, they cannot provide detailed information about how and where alignments differ. To fill this gap, I have developed AlnDotPlot, a visual tool inspired by traditional dot plots that can compare alternative pairwise alignments and is available as an R package. AlnDotPlot can provide a detailed comparison between a handful of pairwise alignments, identify patterns in hundreds of alignment sampling results, and find short base pair differences among alignments of a few kilobases. This software combines the simple nature of dot plots with features to analyze pairwise sequence alignments.
+
+\section{Implementation}
+
+AlnDotPlot can generate alignment dot plots that compare sets of pairwise alignments. This R package can read in alignments in FASTA format and produce results in PDF and TEX format. Internally, the alignment information is converted into matrices, which are in turn, used to create the dot plots. I use the \textit{tikzDevice} R package to create the final results for its versatility and accuracy \citep{sharpsteen2023tikzdevice}. The following sections describe the different models and their implementation and use cases. AlnDotPlot is available as an R software package at \url{https://www.github.com/jgarciamesa/alndotplot}.
+
+\subsection{From Alignment to Dot Matrix}
+% Explain how to go from alignment to dot plot
+
+AlnDotPlot generates different alignment dot plots given a set of pairwise alignments. To generate these figures, the first step is to read in the pairwise alignments. Next, the alignment information must be transformed into a dot matrix, which stores this information in a conventional two-dimensional matrix. Based on the different model designs, I have implemented two types of dot matrices. For the simplest model, a traditional dot plot, the dot matrix records only the positions within the alignments involving substitutions (matches and mismatches).
+Given two sequences $s$ and $v$, this dot matrix has dimensions $|s|$ by $|v|$, where each row corresponds to symbols in $s$ and every column to symbols in $v$. Every cell in the matrix represents a symbol from $s$ that matches (or mismatches) with a symbol in $v$. The value in every cell is the count of substitutions between these symbols across all input alignments. Figure \ref{fig:aln2matrix-traditional} showcases a sample alignment and its corresponding traditional dot matrix.
+
+\begin{figure}[!ht]
+    \centering
+    % \begin{multicols}{3}
+    \begin{subfigure}[c]{0.4\textwidth}
+        \centering
+        \vspace*{-7em}\input{chapter4/figures/aln2matrix/traditional-aln}
+        \vspace*{1.5em}\caption{}
+     \end{subfigure}
+     \hspace{0.3em}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \input{chapter4/figures/aln2matrix/traditional-counts}
+        \caption{}
+     \end{subfigure}
+    %  \hfill
+    % \begin{subfigure}[b]{0.3\textwidth}
+    %     \centering
+    %     \input{chapter4/figures/aln2matrix/traditional}
+    %     \caption{}
+    %  \end{subfigure}
+
+    \caption[Alignment to Traditional Dot Matrix]{Converting a pairwise alignment to a traditional dot matrix. (a) is an alignment of sequences $s$ and $v$, with matches and mismatches (substitutions) colored arbitrarily. (b) is a matrix with the characters in sequence $s$ as rows and the characters in sequence $v$ as columns. The values indicate the count of substitutions between the row and column nucleotides (i.e., the first `C' in both sequences is matched once on the alignment). Note empty cells have a count of zero, omitted here.}
+    \label{fig:aln2matrix-traditional}
+    % (c) is the dot matrix resulting from the alignment in (a), indicating where the substitutions occur. Here, colors connect the substitutions in the alignment with the cells in the dot matrix.}
+\end{figure}
+
+% dot matrix with indels % dot matrix expanded
+
+Expanded dot matrices extend traditional dot matrices, described above, by incorporating indel information, and a similar construction procedure. Given a collection of pairwise alignments between sequences $s$ and $v$, this dot matrix has dimensions $(2\cdot|s|+1)$ by $(2\cdot|v|+1)$, where even rows and columns correspond the symbols in $s$ and $v$ respectively, and odd rows and columns represent gap symbols. Expanding upon the previous dot matrix design, this configuration enables marking insertion and deletion events with clarity. The values within the matrix represent the count of the corresponding row and column symbol pairs found in the alignments. Figure \ref{fig:aln2matrix-expanded} illustrates how an expanded dot matrix is constructed.
+
+\begin{figure}[!hbt]
+    \centering
+    \begin{subfigure}[c]{0.2\textwidth}
+        \centering
+        \vspace*{1em}\hspace*{-2em}\input{chapter4/figures/aln2matrix/expanded-aln}
+        \vspace*{1em}\caption{}
+     \end{subfigure}
+     \hspace{6em}
+    \begin{subfigure}[c]{0.5\textwidth}
+        \centering
+        \resizebox{1.15\textwidth}{!}{\input{chapter4/figures/aln2matrix/expanded-counts}}
+        \caption{}
+     \end{subfigure}
+    % \begin{subfigure}[b]{0.49\textwidth}
+    %     \centering
+    %     \resizebox{1.3\textwidth}{!}{\input{chapter4/figures/aln2matrix/expanded}}
+    %     \caption{}
+    %  \end{subfigure}
+    \caption[Alignment to Expanded Dot Matrix]{Converting three alternative alignments to an expanded dot matrix. (a) is three alternative alignments of sequences $s$ and $v$. (b) is a matrix with the characters in sequence $s$ as rows and the characters in sequence $v$ as columns. In addition, gap symbols have been added to represent indel information. The values indicate the count of substitutions or indels between the row and column characters (i.e., the first `C' in both sequences is matched in all three alignments). Note empty cells have a count of zero, omitted here.}
+    \label{fig:aln2matrix-expanded}
+    % (c) is the dot matrix resulting from the alignment in (a), indicating where the substitutions and indel occur. Here colors are used to indicate the percentage of occurrences per event. Dark purple indicates the event is present in all three alignments (100\%), blue indicates 50\% (present in two alignments), and green indicates 33\% (only one alignment).}
+\end{figure}
+
+\subsection{Dot Plot Models}
+
+\subsubsection{Traditional Model}
+
+The traditional dot plot model resembles the original dot plots most, adapting the idea of identifying similarity between sequences to pairwise alignments. Consequently, this model only considers substitutions by using the traditional dot matrix. After calculating the counts for each cell, these are converted into frequencies. These values represent the percentage of alignments where each pair of symbols is aligned together. The final step is to draw squares on the tikz grid filled with a color corresponding to their frequency.
+
+Figure \ref{fig:traditional} illustrates a traditional dot plot with three different alignments.
+Diagonal rows of squares, running left to right and top to bottom, indicate regions of contiguous substitutions. In addition, darker sections are most common among the alignments, while lighter squares indicate less frequent pairings. This model retains the simplicity of dot plots and is an efficient tool for highlighting common substitution patterns in pairwise alignments. Furthermore, the traditional model is scalable to a large number of sequences.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[c]{0.2\textwidth}
+        \centering
+        \hspace*{-2em}\input{chapter4/figures/example-alns}
+        \vspace*{-1.5em}\caption{}
+     \end{subfigure}
+     \hspace{6em}
+    \begin{subfigure}[c]{0.5\textwidth}
+        \centering
+        \resizebox{1.15\textwidth}{!}{\input{chapter4/figures/example-trad}}
+        \caption{}
+     \end{subfigure}
+    \caption[Traditional Dot Plot Model]{Example of a traditional alignment dot plot of three possible pairwise alignments. Squares represent matching and mismatching nucleotides, while the color gradient indicates their frequency in the alignments. The first two nucleotides `C' and `A' are matched in all three alignments (100\%). The remaining squares on the main diagonal are only shared in two alignments (66\%), while the remaining squares are only present in one alignment (33\%).}
+    \label{fig:traditional}
+\end{figure}
+
+\subsubsection{Expanded Model}
+% adds information about indels
+
+% using extended dot matrix - check name
+% more similar to NW, SW, and Gotoh alignment matrices
+% In addition to diagonals, now moving right or below indicates indels
+% double in size
+% more informative, yet "high traffic sections" are indistinguishable
+The expanded model includes information about indel events and therefore uses an expanded dot matrix to store alignment counts. These plots are conceptually similar to conventional visual aids to explain Needleman-Wunsch \citep{Needleman1970} or Gotoh \citep{gotoh_1982} algorithms where an alignment is illustrated as the path through a matrix. In comparison to the previous model, these plots add gap symbols between the characters of each sequence and are used to mark indel events. However, the process of creating the tikz grid with squares is similar. Counts are converted to frequencies and used to fill the squares in the matrix with the appropriate color. This model can easily accommodate large amounts of alignments.
+
+\begin{figure}[!ht]
+    \centering
+    \begin{subfigure}[c]{0.2\textwidth}
+        \centering
+        \hspace*{-2em}\scalebox{0.8}{\input{chapter4/figures/example-alns}}
+        \vspace*{-1.5em}\caption{}
+     \end{subfigure}
+     \hspace{3.2em}
+    \begin{subfigure}[c]{0.5\textwidth}
+        \centering
+        \resizebox{1.3\textwidth}{!}{\input{chapter4/figures/example-exp}}
+        \caption{}
+     \end{subfigure}
+    \caption[Expanded Dot Plot Model]{Example of an expanded alignment dot plot for three possible pairwise alignments. Squares indicate substitution, insertion, or deletion events between symbols of the sequences. Diagonal rows of squares represent substitutions, while vertical and horizontal contiguous squares represent deletions and insertions, respectively. Colors indicate the frequency of events in the alignments.}
+    \label{fig:expanded}
+\end{figure}
+
+Figure \ref{fig:expanded} illustrates how an expanded dot plot is created from the same three pairwise alignments as in the previous model. In addition to the diagonals of squares that indicate substitutions, this plot provides information about how they are connected. Furthermore, the expanded model uncovers a high-traffic section where paths cross, a cell connecting two gap symbols with 100\% frequency.
+
+\subsubsection{Line Model}
+
+% adds path identification, clarifying congested areas
+The line model introduces a new concept of nodes connected with edges to form a path or line.
+The nodes represent events in the alignment, while the edges connect pairs of cells in an alignment matrix. This model is an evolution of the expanded model, where the events are alignment events are marked and the edges clarify the transition between them. The line in a plot can split into different branches, indicating sections where the alignments are different. An expanded dot matrix is used to build a line dot plot. Similarly to the previous models, counts are converted to frequencies and used to fill the nodes with the corresponding color. However, the line model utilizes three matrices to store substitutions, insertions, and deletions separately, needed to identify source and destination information to plot the edges. In addition, the edges are colored with the frequency of the destination node. This model can be seen as an extension of the expanded model that unveils information about high-traffic nodes and introduces the concept of a path, which will be useful later. Furthermore, this model is easily scalable to large amounts of data.
+
+Figure \ref{fig:line} illustrates the line alignment dot plot resulting from three alignments. In comparison to the expanded model, figure \ref{fig:line}-b helps disentangle the alignment path in congested areas such as the node where the three alignments, represented by two different branches, cross.
+
+\clearpage
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[c]{0.2\textwidth}
+        \centering
+        \vspace*{4em}\hspace*{-4em}\scalebox{0.8}{\input{chapter4/figures/example-alns}}
+        \vspace*{1em}\caption{}
+     \end{subfigure}
+     \hspace{3.2em}
+    \begin{subfigure}[c]{0.5\textwidth}
+        \centering
+        \resizebox{1.3\textwidth}{!}{\input{chapter4/figures/example-line}}
+        \caption{}
+     \end{subfigure}
+    \caption[Line Dot Plot Model]{Example of a line alignment dot plot for three possible pairwise alignments. Nodes represent substitution, insertion, or deletion events between characters in the sequences or gap symbols. Edges join nodes to indicate a path or line, and the colors specify the frequency of events in the alignments.}
+    \label{fig:line}
+\end{figure}
+
+\subsubsection{Multiple Lines Model}
+
+The multiple lines model provides the most information about a set of pairwise alignments and extends the line model by encoding each alignment as a distinct path. Events for every input alignment are stored into their own three matrices, one for each of substitutions, deletions, and insertions, resulting in a collection of matrix trios. This model converts the list of matrix counts into frequencies and either colors each alignment with the frequency in the set of input alignments, or colors each alignment differently. A novel feature of this model is that every alignment has a designated position on each cell preventing different alignments from overlapping.
+
+The multiple lines dot plot resulting from the three alignments used throughout this section is finally able to fully distinguish the different alignments (Fig. \ref{fig:mlines}). This provides a detailed comparison of the alignments.
+
+\begin{figure}[!ht]
+    \centering
+    \begin{subfigure}[c]{0.6\textwidth}
+        \centering
+        \scalebox{0.8}{\input{chapter4/figures/example-mlines-alns}}
+        \caption{}
+     \end{subfigure}
+     \hspace{3.2em}
+    \begin{subfigure}[c]{0.8\textwidth}
+        \centering
+        \hspace*{-1em}\resizebox{1.1\textwidth}{!}{\input{chapter4/figures/example-mlines}}
+        \caption{}
+     \end{subfigure}
+    \caption[Multiple Lines Dot Plot Model]{Example of a multiple lines dot plot for three possible pairwise alignments. Nodes represent substitution, insertion, or deletion events and edges connect them. In this model, all three alignments are different and therefore are displayed as unique paths. This allows full distinction of each alignment, providing a detailed comparison.}
+    \label{fig:mlines}
+\end{figure}
+
+\subsection{Bubble Finding}
+% Explain the bubble find algorithm.
+%  Look at the code, something about children and parent nodes
+%  Finding where the merged path (100\%) stops (beginning of bubble) and where it returns (end of bubble) 
+% limitation of the previous models: long sequences cannot be plotted clearly
+% This is useful for finding short base-pair differences
+
+The models described in the previous section are designed to handle large amounts of sequences. However, given the nature of the implementation, properly plotting long sequences can be challenging; as illustrated by a multiple lines dot plot of two pairwise alignments with 180 nucleotides long sequences (Fig.~\ref{fig:example-long}-a). To improve the abilities of AlnDotPlot, I have developed a feature that, given two pairwise alignments, can detect sections of dissimilarity and plot them using the line model (Fig.~\ref{fig:example-long}-b). In addition, the resulting dot plots explicitly mark matches with an `X' on the corresponding nodes. The bubble finding function finds all sections where the alignments diverge and creates a line dot plot for each one. This feature is specially designed for alignments of long sequences with relatively small differences, allowing a more precise evaluation.
+
+\begin{figure}[!ht]
+ \centering
+    \begin{subfigure}[c]{\textwidth}
+        \centering
+        \scalebox{0.035}{\input{chapter4/figures/example-long}}
+        \caption{}
+     \end{subfigure}
+    \begin{subfigure}[c]{\textwidth}
+        \centering
+        \scalebox{0.6}{\input{chapter4/figures/example-bubble}}
+        \caption{}
+     \end{subfigure}
+ \caption[Multiple Lines and Bubble Dot Plots]{Example of a multiple lines dot plot of two pairwise alignments with two sequences of approximately 180 nucleotides each (a) and the result of running the bubble finding function over the same alignments (b). Rendering dot plots of long sequences is limiting. However, the AlnDotPlot can find the difference in the alignment and create a line plot only of that section.}
+ \label{fig:example-long}
+\end{figure}
+
+The algorithm to find the divergent sections, also called bubbles, conceptually classifies the relationship between nodes as parent and child. A parent node precedes the current one, while the child node follows it, ordered from the top-left to the bottom-right of the matrix. Note that nodes can have multiple children and parents in the line model. The algorithm first creates a list of full nodes, which are those shared by all alignments. Then, using this list, the function looks for the first node with a full parent and without a full child, indicating the beginning of a bubble. Conversely, the end of the bubble is marked by the next node with no full parents and a full child node. This is repeated until the end of the line, carefully avoiding misclassifying the start and end nodes of the alignment. In addition, the algorithm adjusts the start and end nodes in the bubble to display entire codons. Figure \ref{fig:bubble-examples} showcases line dot plots found using the bubble-finding function of two pairwise alignments with 2.3 kilobases long sequences from the results of chapter \ref{ch:marginal}.
+
+\begin{figure}[!ht]
+ \centering
+ \scalebox{0.8}{\input{chapter4/figures/ENSG135622-3}}
+ \vspace{0.5em}
+
+ \scalebox{0.6}{\input{chapter4/figures/ENSG135622-1}}
+ \vspace{0.5em}
+
+ \scalebox{0.52}{\input{chapter4/figures/ENSG160255-2}}
+ \caption[Bubble Finding Plots]{Line dot plots obtained using the bubble finding from two different pairwise alignments of approximately 2.3 kilobases long sequences. This showcases the bubble-finding algorithm. Green paths correspond to the COATi marginal-mg-sum model and orange paths to the COATi triplet-mg model. Match nodes are crossed in black or white.}
+ \label{fig:bubble-examples}
+\end{figure}
+
+\clearpage
+
+\subsection{Codon Similarity}
+
+In addition to the nucleotide interactions in the alignment, I am interested in understanding how codon similarity can affect the alignment path. Therefore, \mbox{AlnDotPlot} can color code grid sections in the dot plot to represent the affinity of the two intersecting codons (row and column codons). This is done by dividing the grid into 6 by 6 submatrices (3 nucleotides per codon plus gap symbols) and coloring their background. There are four different colors, indicating different similarity levels. First, if the two codons are identical, meaning no changes at the DNA level, the section is colored green. Second, if the codons code for the same amino acid, also known as synonymous, their cross-section is colored yellow. The third and fourth categories classify the non-synonymous codons interactions based on their evolutionary properties as defined by Kosiol et al. \citeyearpar{kosiol_ECM_2007}. Using these categories if the amino acid translation for both codons belongs to the same group, the section is filled in orange; otherwise, the intersecting region is colored in red. This contextualizes the alignment and can provide insight into why certain models avoid specific areas (e.g., Fig.~\ref{fig:codon-similarity}).
+
+\begin{figure}[!ht]
+ \centering
+ \scalebox{0.8}{\input{chapter4/figures/0.8-ENSG00000135622.fasta3}}
+ \vspace{0.5em}
+
+ \scalebox{0.6}{\input{chapter4/figures/0.8-ENSG00000135622.fasta1}}
+ \vspace{0.5em}
+
+ \scalebox{0.52}{\input{chapter4/figures/0.8-ENSG00000160255.fasta2}}
+ \caption[Codon Similarity Dot Plot]{Line alignment dot plots with codon similarity information. Equal codon interactions are colored in green and different codons that code for the same amino acid are in yellow. Codons encoding for amino acids that are in the same similarity group are in orange, otherwise in red.}
+ \label{fig:codon-similarity}
+\end{figure}
+
+\clearpage
+
+\section{Discussion}
+% Comment that this was used in the previous chapter and how it helped.
+
+The development of this tool responds to a need to understand better the difference between two alignment models with similar benchmark results. While the simpler models might not fit many scenarios, the multiple lines model and the bubble-finding feature are valuable tools in analyzing sequence alignments. AlnDotPlot can compare pairwise alignments and provide detailed insights through an intuitive visual representation. This R package can be included in alignment assessment pipelines in addition to distance metrics and alignment accuracy tools.
+
+Future work includes supporting other output formats, such as image files that support rasterization to convert from plots back to alignment. In addition, developing a method to display long pairwise alignments would address a clear limitation.
+
+% Limitation/future work: plotting long sequences. Ideas?

@@ -1,0 +1,46 @@
+\definecolor{colorR}{RGB}{228,26,28}    % RED
+\definecolor{colorB}{RGB}{55,126,184}   % BLUE
+\definecolor{colorG}{RGB}{77,175,74}    % GREEN
+\definecolor{colorP}{RGB}{152,78,163}   % PURPLE
+
+\tikzstyle{line}=[draw, -stealth', very thick,black]
+\tikzstyle{block}=[circle,fill=colorB!50,on grid]
+\tikzstyle{lab}=[]
+\tikzstyle{w}=[lab,midway]
+\tikzstyle{e}=[lab,midway,above=0.2mm,auto=false,font=\small,text=black]
+
+\begin{tikzpicture}[node distance=25mm, auto,
+	dottedline/.style = {ultra thick, loosely dotted,shorten >=1mm, shorten <=1mm}]
+ 
+\useasboundingbox (-5.5,-4) rectangle (5.5,1);
+
+% complimenting FST
+\node (in) {input: ACT};
+\node[below=3cm of in] (out) {output: T\phantom{GA}};
+
+\node[block,below left=1.5cm and 4.1cm of in.west,fill=colorG!50] (start1) {start};
+\node[block,right=18mm of start1,minimum size=20pt] (cod0) {};
+\node[block,right=25mm of cod0,minimum size=20pt,fill=colorB] (cod1) {};
+\node[block,right=25mm of cod1,minimum size=20pt] (cod2) {};
+\node[block,right=25mm of cod2,minimum size=20pt] (cod3) {};
+\node[block,fill=colorR!50,right=18mm of cod3] (end1) {end};
+
+\draw[line] (start1) -- (cod0);
+\draw[line] (cod3) -- (end1);
+
+\draw[line] (cod0) to[bend right=-60] node[e,below=-4.5mm] {A:T} (cod1);
+\draw[line,black!25] (cod0) to[bend right=-25] node[e,below=-4.5mm,text=black!25] {C:G} (cod1);
+\draw[line,black!25] (cod0) to[bend right=25] node[e,below=-4.5mm,text=black!25] {G:C} (cod1);
+\draw[line,black!25] (cod0) to[bend right=60] node[e,below=-4.5mm,text=black!25] {T:A} (cod1);
+
+\draw[line] (cod1) to[bend right=-60] node[e,below=-4.5mm] {A:T} (cod2);
+\draw[line] (cod1) to[bend right=-25] node[e,below=-4.5mm] {C:G} (cod2);
+\draw[line] (cod1) to[bend right=25] node[e,below=-4.5mm] {G:C} (cod2);
+\draw[line] (cod1) to[bend right=60] node[e,below=-4.5mm] {T:A} (cod2);
+
+\draw[line] (cod2) to[bend right=-60] node[e,below=-4.5mm] {A:T} (cod3);
+\draw[line] (cod2) to[bend right=-25] node[e,below=-4.5mm] {C:G} (cod3);
+\draw[line] (cod2) to[bend right=25] node[e,below=-4.5mm] {G:C} (cod3);
+\draw[line] (cod2) to[bend right=60] node[e,below=-4.5mm] {T:A} (cod3);
+
+\end{tikzpicture}
